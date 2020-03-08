@@ -41,7 +41,9 @@ ai_mainbar <- mainPanel(width = 12,
                                                         box( title = "Model Configuration", 
                                                              width = NULL,
                                                              selectInput("train_method","Select a method.", choices = c("cv","LOOCV","none","boot","boot632","optimism_boot","boot_all","repeatedcv","LGOCV")),
-                                                             selectInput("cv_numver","Select a CV number", choices = c(1,3,5,8,10)),
+                                                             selectInput("cv_number","Select a CV number", choices = c(2,3,5,8,10)),
+                                                             sliderInput("percent_train","Training percentage.", min = 0, max =1 , value = 0.8),
+                                                             selectInput("num_repeats","Number of complete sets", choices = c(2,3,5,8,10,15,20)),
                                                              selectInput("metric","Select a metric", choices = c("Accuracy","Kappa", "RMSE","Rsquared","ROC"))
                                                         ),
                                                         ),
@@ -345,9 +347,21 @@ create_obs_updateGroup <- function(input, output, session, rv ){
 create_obs_TrainMethod <- function(input, output){
   event <- observe({
     if(input$train_method == "cv"){
-      shinyjs::show("cv_numver")
+      shinyjs::show("cv_number")
+      shinyjs::hide("percent_train")
+      shinyjs::hide("num_repeats")
+    }else if(input$train_method == "repeatedcv"){
+      shinyjs::show("cv_number")
+      shinyjs::hide("percent_train")
+      shinyjs::show("num_repeats")
+    }else if(input$train_method == "LGOCV"){
+      shinyjs::hide("cv_number")
+      shinyjs::show("percent_train")
+      shinyjs::hide("num_repeats")
     }else{
-      shinyjs::hide("cv_numver")
+      shinyjs::hide("cv_number")
+      shinyjs::hide("percent_train")
+      shinyjs::hide("num_repeats")
     }
     
     
@@ -356,12 +370,37 @@ create_obs_TrainMethod <- function(input, output){
 
 create_ai_confirm_logreg <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_logreg, {
-        if(input$confirm_logreg == "cv"){
-          cctr = caret::trainControl(method = input$train_method, number = input$cv_number,classProbs = TRUE, summaryFunction = twoClassSummary
-          )
+      #browser()  
+      if(input$train_method == "cv"){
+          req(input$cv_number)
+          cctr = caret::trainControl(method = input$train_method, 
+                                     number = as.numeric(input$cv_number), 
+                                     classProbs = TRUE, 
+                                     summaryFunction = twoClassSummary
+                                     )
+        }else if(input$train_method == "repeatedcv"){
+          req(input$cv_number)
+          req(input$num_repeats)
+          cctr = caret::trainControl(method = input$train_method, 
+                                     number = as.numeric(input$cv_number), 
+                                     repeats = as.numeric(input$num_repeats), 
+                                     classProbs = TRUE, 
+                                     summaryFunction = twoClassSummary
+                                     )
+          
+        }else if(input$train_method == "LGOCV"){
+          req(input$percent_train)
+          cctr = caret::trainControl(method = input$train_method, 
+                                     p = as.numeric(input$percent_train), 
+                                     classProbs = TRUE, 
+                                     summaryFunction = twoClassSummary
+                                     )
+          
         }else{
-          cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
-                            )
+          cctr = caret::trainControl(method = input$train_method, 
+                                     classProbs = TRUE, 
+                                     summaryFunction = twoClassSummary
+                                     )
         }
     #browser()
     if(is.null(rv$train)){
@@ -433,17 +472,41 @@ create_ai_confirm_logreg <- function(input = input, output = output, rv = rv){
 
 create_ai_confirm_knn <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_knn, {
-    if(input$confirm_logreg == "cv"){
-      cctr = caret::trainControl(method = input$train_method, number = input$cv_number,classProbs = TRUE, summaryFunction = twoClassSummary
+    if(input$train_method == "cv"){
+      req(input$cv_number)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
+    }else if(input$train_method == "repeatedcv"){
+      req(input$cv_number)
+      req(input$num_repeats)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 repeats = as.numeric(input$num_repeats), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
+    }else if(input$train_method == "LGOCV"){
+      req(input$percent_train)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 p = as.numeric(input$percent_train), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
     }else{
-      cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
+      cctr = caret::trainControl(method = input$train_method, 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
     }
+    #browser()
     if(is.null(rv$train)){
       showNotification("No train found.","Please specify the split of the data.")
     }
-    #browser()
     req(rv$train)
     req(!is.null(input$knn_k))
     kGrid <- expand.grid(k = as.numeric(input$knn_k))
@@ -507,11 +570,35 @@ create_ai_confirm_knn <- function(input = input, output = output, rv = rv){
 
 create_ai_confirm_splsda <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_splsda, {
-    if(input$confirm_logreg == "cv"){
-      cctr = caret::trainControl(method = input$train_method, number = input$cv_number,classProbs = TRUE, summaryFunction = twoClassSummary
+    if(input$train_method == "cv"){
+      req(input$cv_number)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
+    }else if(input$train_method == "repeatedcv"){
+      req(input$cv_number)
+      req(input$num_repeats)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 repeats = as.numeric(input$num_repeats), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
+    }else if(input$train_method == "LGOCV"){
+      req(input$percent_train)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 p = as.numeric(input$percent_train), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
     }else{
-      cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
+      cctr = caret::trainControl(method = input$train_method, 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
     }
     if(is.null(rv$train)){
@@ -580,11 +667,35 @@ create_ai_confirm_splsda <- function(input = input, output = output, rv = rv){
 
 create_ai_confirm_svmLinear <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_svmLinear, {
-    if(input$confirm_logreg == "cv"){
-      cctr = caret::trainControl(method = input$train_method, number = input$cv_number,classProbs = TRUE, summaryFunction = twoClassSummary
+    if(input$train_method == "cv"){
+      req(input$cv_number)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
+    }else if(input$train_method == "repeatedcv"){
+      req(input$cv_number)
+      req(input$num_repeats)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 repeats = as.numeric(input$num_repeats), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
+    }else if(input$train_method == "LGOCV"){
+      req(input$percent_train)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 p = as.numeric(input$percent_train), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
     }else{
-      cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
+      cctr = caret::trainControl(method = input$train_method, 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
     }
     if(is.null(rv$train)){
@@ -653,11 +764,35 @@ create_ai_confirm_svmLinear <- function(input = input, output = output, rv = rv)
 
 create_ai_confirm_rf <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_rf, {
-    if(input$confirm_logreg == "cv"){
-      cctr = caret::trainControl(method = input$train_method, number = input$cv_number,classProbs = TRUE, summaryFunction = twoClassSummary
+    if(input$train_method == "cv"){
+      req(input$cv_number)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
+    }else if(input$train_method == "repeatedcv"){
+      req(input$cv_number)
+      req(input$num_repeats)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 repeats = as.numeric(input$num_repeats), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
+    }else if(input$train_method == "LGOCV"){
+      req(input$percent_train)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 p = as.numeric(input$percent_train), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
     }else{
-      cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
+      cctr = caret::trainControl(method = input$train_method, 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
     }
     if(is.null(rv$train)){
@@ -750,11 +885,35 @@ create_obs_aiTab <- function(input, output, session){
 
 create_ai_confirm_lr <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_lr, {
-    if(input$confirm_logreg == "cv"){
-      cctr = caret::trainControl(method = input$train_method, number = input$cv_number,
+    if(input$train_method == "cv"){
+      req(input$cv_number)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
+    }else if(input$train_method == "repeatedcv"){
+      req(input$cv_number)
+      req(input$num_repeats)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 number = as.numeric(input$cv_number), 
+                                 repeats = as.numeric(input$num_repeats), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
+    }else if(input$train_method == "LGOCV"){
+      req(input$percent_train)
+      cctr = caret::trainControl(method = input$train_method, 
+                                 p = as.numeric(input$percent_train), 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
+      )
+      
     }else{
-      cctr = caret::trainControl(method = input$train_method
+      cctr = caret::trainControl(method = input$train_method, 
+                                 classProbs = TRUE, 
+                                 summaryFunction = twoClassSummary
       )
     }
     if(is.null(rv$train)){
