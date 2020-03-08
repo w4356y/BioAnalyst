@@ -214,6 +214,9 @@ create_ai_confirm_ai_data <- function(input = input, output = output, rv = rv, r
                                       rv_feature = rv_feature){
   event <- observeEvent(input$confirm_ai_data,{
     if(input$data_source == "New Data"){
+      if(is.null(input$input_x) | is.null(input$input_y)){
+        showNotification("Input data has to be specified.","Input files are needed.")
+      }
       req(!is.null(input$input_x))
       req(!is.null(input$input_y))
       df_x = read_delimKB(input$input_x$datapath)  %>% as.data.frame()
@@ -267,6 +270,9 @@ create_ai_confirm_ai_data <- function(input = input, output = output, rv = rv, r
 
 create_ai_confirm_config <- function(input = input, output = output, rv = rv){
   event <- observeEvent(input$confirm_config, {
+      if(input$seed == ""){
+        showNotification("Seed is needed.","Please type in a seed.")
+      }
       req(input$seed)
       set.seed(as.numeric(input$seed))
       req(rv$data)
@@ -358,10 +364,14 @@ create_ai_confirm_logreg <- function(input = input, output = output, rv = rv){
                             )
         }
     #browser()
+    if(is.null(rv$train)){
+      showNotification("No train found.","Please specify the split of the data.")
+    }
     req(rv$train)
     req(!is.null(input$lr_lambda))
     req(!is.null(input$lr_cp))
     lrGrid <- expand.grid(lambda = as.numeric(input$lr_lambda), cp = input$lr_cp)
+    set.seed(100)
     test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                  method = "plr", tuneGrid = lrGrid,
                                  trControl = cctr, metric = input$metric
@@ -430,10 +440,14 @@ create_ai_confirm_knn <- function(input = input, output = output, rv = rv){
       cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
       )
     }
+    if(is.null(rv$train)){
+      showNotification("No train found.","Please specify the split of the data.")
+    }
     #browser()
     req(rv$train)
     req(!is.null(input$knn_k))
     kGrid <- expand.grid(k = as.numeric(input$knn_k))
+    set.seed(100)
     test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "knn", tuneGrid = kGrid,
                                         trControl = cctr, metric = input$metric
@@ -500,10 +514,14 @@ create_ai_confirm_splsda <- function(input = input, output = output, rv = rv){
       cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
       )
     }
+    if(is.null(rv$train)){
+      showNotification("No train found.","Please specify the split of the data.")
+    }
+    req(rv$train)
     Grid <- expand.grid(K = as.numeric(input$ncomp_splsda),
                          eta = as.numeric(input$eta_splada),
                         kappa = .5)   
-    
+    set.seed(100)
     test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "spls", tuneGrid = Grid,
                                         trControl = cctr, metric = input$metric
@@ -569,8 +587,12 @@ create_ai_confirm_svmLinear <- function(input = input, output = output, rv = rv)
       cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
       )
     }
- 
+    if(is.null(rv$train)){
+      showNotification("No train found.","Please specify the split of the data.")
+    }
+    req(rv$train)
     Grid <- expand.grid(C = as.numeric(input$svmlinear_C))
+    set.seed(100)
     test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "svmLinear", tuneGrid = Grid,
                                         trControl = cctr, metric = input$metric
@@ -638,7 +660,12 @@ create_ai_confirm_rf <- function(input = input, output = output, rv = rv){
       cctr = caret::trainControl(method = input$train_method, classProbs = TRUE, summaryFunction = twoClassSummary
       )
     }
+    if(is.null(rv$train)){
+      showNotification("No train found.","Please specify the split of the data.")
+    }
+    req(rv$train)
     Grid <- expand.grid(mtry = as.numeric(input$rf_mtry))
+    set.seed(100)
     test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "rf", tuneGrid = Grid,
                                         ntree = as.numeric(input$rf_ntree),
@@ -730,9 +757,13 @@ create_ai_confirm_lr <- function(input = input, output = output, rv = rv){
       cctr = caret::trainControl(method = input$train_method
       )
     }
+    if(is.null(rv$train)){
+      showNotification("No train found.","Please specify the split of the data.")
+    }
+    req(rv$train)
     #Grid <- expand.grid(mtry = as.numeric(input$rf_mtry))
     dataset = sapply(colnames(rv$train), function(x) rv$train[[x]] = as.numeric(rv$train[[x]])) %>% as.data.frame()
-    
+    set.seed(100)
     test_class_cv_model <- caret::train(label ~ .,data =dataset, 
                                         method = "lm",  
                                         trControl = cctr, metric = input$metric
