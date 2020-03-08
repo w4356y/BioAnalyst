@@ -409,16 +409,26 @@ create_ai_confirm_logreg <- function(input = input, output = output, rv = rv){
     req(rv$train)
     req(!is.null(input$lr_lambda))
     req(!is.null(input$lr_cp))
-    lrGrid <- expand.grid(lambda = as.numeric(input$lr_lambda), cp = input$lr_cp)
-    set.seed(100)
-    test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
-                                 method = "plr", tuneGrid = lrGrid,
-                                 trControl = cctr, metric = input$metric
-                                  )
+    withProgress(message = 'Penalized Logistic Model is in progress',
+                 detail = 'This may take a while...', value = 0, 
+                 {
+                   lrGrid <- expand.grid(lambda = as.numeric(input$lr_lambda), cp = input$lr_cp)
+                   incProgress(1/3)
+                   set.seed(100)
+                   test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
+                                                       method = "plr", tuneGrid = lrGrid,
+                                                       trControl = cctr, metric = input$metric
+                   )
+                   incProgress(1/3)
+                   #browser()
+                   pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
+                   confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                   incProgress(1/3)
+                  }
+                 )
+    
     #browser()
-    pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
-    #browser()
-    confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+    
     output$textai<- renderPrint({
       confuseM$table
     })
@@ -509,15 +519,26 @@ create_ai_confirm_knn <- function(input = input, output = output, rv = rv){
     }
     req(rv$train)
     req(!is.null(input$knn_k))
-    kGrid <- expand.grid(k = as.numeric(input$knn_k))
-    set.seed(100)
-    test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
-                                        method = "knn", tuneGrid = kGrid,
-                                        trControl = cctr, metric = input$metric
-    )
+    withProgress(message = 'KNN model is in progress',
+                 detail = 'This may take a while...', value = 0, 
+                 {
+                   kGrid <- expand.grid(k = as.numeric(input$knn_k))
+                   set.seed(100)
+                   incProgress(1/3)
+                   test_class_cv_model <- caret::train(label ~ .,
+                                                       data = rv$train, 
+                                                       method = "knn", 
+                                                       tuneGrid = kGrid,
+                                                       trControl = cctr, 
+                                                       metric = input$metric
+                                                       )
+                   incProgress(1/3)
     #browser()
-    pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
-    confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                   pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
+                   confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                   incProgress(1/3)
+                }
+    )
     output$textai<- renderPrint({
       confuseM$table
     })
@@ -605,17 +626,25 @@ create_ai_confirm_splsda <- function(input = input, output = output, rv = rv){
       showNotification("No train found.","Please specify the split of the data.")
     }
     req(rv$train)
-    Grid <- expand.grid(K = as.numeric(input$ncomp_splsda),
-                         eta = as.numeric(input$eta_splada),
-                        kappa = .5)   
-    set.seed(100)
-    test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
+    
+    withProgress(message = 'sPLS model is in progress',
+                 detail = 'This may take a while...', value = 0, 
+                 {
+                   Grid <- expand.grid(K = as.numeric(input$ncomp_splsda),
+                          eta = as.numeric(input$eta_splada),
+                          kappa = .5)   
+                   set.seed(100)
+                   incProgress(1/3)
+                   test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "spls", tuneGrid = Grid,
                                         trControl = cctr, metric = input$metric
+                  )
+                  incProgress(1/3)
+                  pred = predict(test_class_cv_model, newdata = rv$test, type = "prob")
+                  confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                 incProgress(1/3)
+                }
     )
-    #browser()
-    pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
-    confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
     output$textai<- renderPrint({
       confuseM$table
     })
@@ -702,15 +731,24 @@ create_ai_confirm_svmLinear <- function(input = input, output = output, rv = rv)
       showNotification("No train found.","Please specify the split of the data.")
     }
     req(rv$train)
-    Grid <- expand.grid(C = as.numeric(input$svmlinear_C))
-    set.seed(100)
-    test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
+    withProgress(message = 'SVM Linear model is in progress',
+                 detail = 'This may take a while...', value = 0, 
+                 {
+                   Grid <- expand.grid(C = as.numeric(input$svmlinear_C))
+                   set.seed(100)
+                   incProgress(1/3)
+                   test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "svmLinear", tuneGrid = Grid,
                                         trControl = cctr, metric = input$metric
-    )
+                                        )
+                   incProgress(1/3)
     #browser()
-    pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
-    confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                   pred = predict(test_class_cv_model, newdata = rv$test, type = "prob")
+                   
+                  confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                  incProgress(1/3)
+                 }
+    )
     output$textai<- renderPrint({
       confuseM$table
     })
@@ -799,16 +837,24 @@ create_ai_confirm_rf <- function(input = input, output = output, rv = rv){
       showNotification("No train found.","Please specify the split of the data.")
     }
     req(rv$train)
-    Grid <- expand.grid(mtry = as.numeric(input$rf_mtry))
-    set.seed(100)
-    test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
+    withProgress(message = 'Random forest model is in progress',
+                 detail = 'This may take a while...', value = 0, 
+                 {
+                   Grid <- expand.grid(mtry = as.numeric(input$rf_mtry))
+                   set.seed(100)
+                   incProgress(1/3)
+                   test_class_cv_model <- caret::train(label ~ .,data = rv$train, 
                                         method = "rf", tuneGrid = Grid,
                                         ntree = as.numeric(input$rf_ntree),
                                         trControl = cctr, metric = input$metric
-    )
+                                        )
+                   incProgress(1/3)
     #browser()
-    pred=predict(test_class_cv_model, newdata = rv$test, type = "prob")
-    confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                   pred = predict(test_class_cv_model, newdata = rv$test, type = "prob")
+                   confuseM = caret::confusionMatrix(predict(test_class_cv_model, rv$test), as.factor(rv$test$label))
+                   incProgress(1/3)
+                 }
+    )
     output$textai<- renderPrint({
       confuseM$table
     })
@@ -920,12 +966,23 @@ create_ai_confirm_lr <- function(input = input, output = output, rv = rv){
       showNotification("No train found.","Please specify the split of the data.")
     }
     req(rv$train)
+    withProgress(message = 'Linear regression model is in progress',
+                 detail = 'This may take a while...', value = 0, 
+                 {
     #Grid <- expand.grid(mtry = as.numeric(input$rf_mtry))
-    dataset = sapply(colnames(rv$train), function(x) rv$train[[x]] = as.numeric(rv$train[[x]])) %>% as.data.frame()
-    set.seed(100)
-    test_class_cv_model <- caret::train(label ~ .,data =dataset, 
+                   dataset = sapply(colnames(rv$train), function(x) rv$train[[x]] = as.numeric(rv$train[[x]])) %>% as.data.frame() 
+                   set.seed(100)
+                   incProgress(1/3)
+                   test_class_cv_model <- caret::train(label ~ .,data =dataset, 
                                         method = "lm",  
                                         trControl = cctr, metric = input$metric
+                                        )
+                   incProgress(1/3)
+                   test_set = sapply(colnames(rv$test), function(x) rv$test[[x]] = as.numeric(rv$test[[x]])) %>% as.data.frame()
+                   #browser()
+                   pred =predict(test_class_cv_model, newdata = test_set)
+                   incProgress(1/3)
+                 }
     )
     output$ai_table <- DT::renderDataTable({
       #browser()
@@ -939,9 +996,7 @@ create_ai_confirm_lr <- function(input = input, output = output, rv = rv){
       )
     }
     )
-    test_set = sapply(colnames(rv$test), function(x) rv$test[[x]] = as.numeric(rv$test[[x]])) %>% as.data.frame()
-    #browser()
-    pred =predict(test_class_cv_model, newdata = test_set)
+    
     output$plot_ai <-   renderPlot({
       plot(x= pred, y = rv$test$label)
       abline(a = 0, b =1)
