@@ -16,3 +16,10 @@ Language: es
 LazyData: true
 Imports: 
     ggplot2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
