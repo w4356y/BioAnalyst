@@ -5,33 +5,33 @@ feature_mainbar <- mainPanel(width = 12,
            tabBox(
              title = NULL,
              id = "tabset2", width = NULL,
-             tabPanel( "DataTable_Feature", 
+             shiny::tabPanel( "DataTable_Feature",
                        width = NULL,
-                       box( title = "Data/Plot", 
+                       box( title = "Data/Plot",
                             width = NULL,
-                            div(style = 'overflow-x: scroll; overflow-y: scroll;',
+                            shiny::div(style = 'overflow-x: scroll; overflow-y: scroll;',
                                 DT::dataTableOutput("feature_table")),
                             plotOutput("plot2",width = "auto", height = "400px"),
                             shinyjs::useShinyjs(),
-                            fluidRow(column(6, 
+                            fluidRow(column(6,
                                             actionButton("previousPage","Previous")),
                                      column(6,
                                             actionButton("nextPage","Next")))
-                           
+
                         )
                        ),
-             tabPanel( "Stat_sample", 
+             shiny::tabPanel( "Stat_sample",
                        width = "100%",
-                       box( title = "", 
+                       box( title = "",
                             width = NULL,
                                      plotOutput("feature_plot_sample",width = "585px", height = "450px"),
-                                     div(style = 'overflow-x: scroll; overflow-y: scroll;',       
+                                     div(style = 'overflow-x: scroll; overflow-y: scroll;',
                                      DT::dataTableOutput("feature_stat_sample"))
                                             )
-                                     
-                       
+
+
              ),
-             tabPanel( "Stat_feature", 
+             shiny::tabPanel( "Stat_feature",
                        width = "100%",
                        box(title = "", width = NULL,
                        plotOutput("feature_plot_feature",width = "585px", height = "450px"),
@@ -39,16 +39,16 @@ feature_mainbar <- mainPanel(width = 12,
                                        DT::dataTableOutput("feature_stat_feature"))
              )
              )
-             
+
                     )
            ),
     column(width = 5,
            box(
-             title = "Import/PreProcessing", 
+             title = "Import/PreProcessing",
              width = NULL,
              fileInput("feature_file",
                        "Choose a file",
-                       multiple = F, 
+                       multiple = F,
                        accept = c(".csv",
                                   ".txt",
                                   ".xlsx")),
@@ -56,13 +56,13 @@ feature_mainbar <- mainPanel(width = 12,
                column(5, actionButton("confirmFeatureFile","Confirm")),
                column(5, actionButton("featureDetection", 'Detection'))
              ),
-             
+
              selectInput("id_feature","Please specify the sample ID.", choice = NA)
            ),
           fluidRow(column(6, 
-                          box(title = "NA Filtering", 
+                          box(title = "NA Filtering",
                               width = 20,
-                              
+
                               sliderInput("proportion_feature",
                                           "Proportion of feature NA",
                                           min = 0,
@@ -71,7 +71,7 @@ feature_mainbar <- mainPanel(width = 12,
                               fluidRow(column(6, actionButton("confirmRemoveFeatureNA", "Remove") ),
                                        column(6, actionButton("cancelRemoveFeatureNA", "Cancel") )
                                        ),
-                              
+
                               sliderInput("proportion_sample",
                                           "Proportion of sample NA",
                                           min = 0,
@@ -80,11 +80,11 @@ feature_mainbar <- mainPanel(width = 12,
                               fluidRow(column(6, actionButton("confirmRemoveSampleNA", "Remove")
                                               ),
                                        column(6, actionButton("cancelRemoveSampleNA", "Cancel")
-                                              )) 
+                                              ))
                           )
                           ),
                    column(6, 
-                          box(title = "Data Transform", 
+                          box(title = "Data Transform",
                               width = 20,
                               selectInput("fillNAmethod","Select a method to fill NA.", choices = c("row_mean","col_mean","row_min","col_min","constant")),
                               textInput("fillFeatureNA","Type in a value."),
@@ -108,8 +108,8 @@ feature_mainbar <- mainPanel(width = 12,
               tabBox(
                 title = NULL,
                 id = "tabset1", width = NULL,
-                tabPanel( "PCA w/z meta & Co-linear-Analysis",
-                          box( title = "", 
+                shiny::tabPanel( "PCA w/z meta & Co-linear-Analysis",
+                          box( title = "",
                                width = NULL,
                                fluidRow(column(4, radioButtons("axis","Which axis?", choices = c("X","Y"))
                                                ),
@@ -117,20 +117,20 @@ feature_mainbar <- mainPanel(width = 12,
                                                ),
                                         column(4, radioButtons("scale_or_not", "Scale or not?", choices = c("TRUE","FALSE"))
                                                ))
-                          
+
                           ),
                           actionButton("confirmPCA","PCA")
                 ),
-                tabPanel( "PCA with meta",
-                          box( title = "", 
+                shiny::tabPanel( "PCA with meta",
+                          box( title = "",
                                width = NULL,
                                selectInput("pca_color","Select a color variable.", choices = NA),
                                selectInput("pca_shape", "Select a shape variable", choices = NA),
                                actionButton("Join_meta_and_feature","detect_merge")
                           )
                 ),
-                tabPanel( "Complex_Heatmap",
-                          box( title = "", 
+                shiny::tabPanel( "Complex_Heatmap",
+                          box( title = "",
                                width = NULL,
                                fluidRow(column(4, selectInput("heatmap_discrete","Select categorical variables.", choices = NA, selectize = T)),
                                         column(4, selectInput("heatmap_continuous","Select continuous variables.", choices = NA, selected = T))),
@@ -147,7 +147,7 @@ feature_mainbar <- mainPanel(width = 12,
                                actionButton("confirmHeatmap","Heatmap")
                           )
                 ),
-                tabPanel( "Differential_Analysis",
+                shiny::tabPanel( "Differential_Analysis",
                           box( title = "", 
                                width = NULL,
                                selectInput("diff_group","Select a group.", choices = NA),
@@ -158,7 +158,7 @@ feature_mainbar <- mainPanel(width = 12,
                           )
                 )
                 
-              ),
+              )
               
               )
           
@@ -814,6 +814,7 @@ create_Feature_previousPage <- function(input, output, rv){
 
 create_obs_kwPairedMethod <- function(input, output){
   event <- observe({
+    #browser()
     if(input$diff_method == "K-W"){
       shinyjs::hide("paired_method")
     }else{

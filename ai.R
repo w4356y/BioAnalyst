@@ -45,13 +45,13 @@ ai_mainbar <- mainPanel(width = 12,
                                                              sliderInput("percent_train","Training percentage.", min = 0, max =1 , value = 0.8),
                                                              selectInput("num_repeats","Number of complete sets", choices = c(2,3,5,8,10,15,20)),
                                                              selectInput("metric","Select a metric", choices = c("Accuracy","Kappa", "RMSE","Rsquared","ROC"))
-                                                        ),
+                                                        )
                                                         ),
                                                  column(8,
                                                         tabBox(
                                                           title = NULL,
                                                           id = "ai_option", width = NULL,
-                                                          tabPanel( "Logistic", 
+                                                          shiny::tabPanel( "Logistic", 
                                                                     width = NULL,
                                                                     box( title = "Tuning Parameter", 
                                                                          width = NULL,
@@ -60,15 +60,15 @@ ai_mainbar <- mainPanel(width = 12,
                                                                          actionButton("confirm_logreg","Confirm")
                                                                     )
                                                           ),
-                                                          tabPanel( "KNN", 
+                                                          shiny::tabPanel( "KNN", 
                                                                     width = NULL,
-                                                                    box( title = "Tuning Parameter", 
+                                                                    shinydashboard::box( title = "Tuning Parameter", 
                                                                          width = NULL,
                                                                          selectInput("knn_k","Specify the neighbor number.", choices = c(1:20), multiple = T),
                                                                          actionButton("confirm_knn","Confirm")
                                                                     )
                                                           ),
-                                                          tabPanel( "sPLS-DA", 
+                                                          shiny::tabPanel( title = "sPLS-DA", 
                                                                     width = NULL,
                                                                     box( title = "Tuning Parameter", 
                                                                          width = NULL,
@@ -77,7 +77,7 @@ ai_mainbar <- mainPanel(width = 12,
                                                                          actionButton("confirm_splsda","Confirm")
                                                                     )
                                                           ),
-                                                          tabPanel( "SVM_Linear", 
+                                                          shiny::tabPanel( "SVM_Linear", 
                                                                     width = NULL,
                                                                     box( title = "Tuning Parameter", 
                                                                          width = NULL,
@@ -87,7 +87,7 @@ ai_mainbar <- mainPanel(width = 12,
                                                                          actionButton("confirm_svmLinear","Confirm")
                                                                     )
                                                           ),
-                                                          tabPanel( "Random_Forest", 
+                                                          shiny::tabPanel( "Random_Forest", 
                                                                     width = NULL,
                                                                     box( title = "Tuning Parameter", 
                                                                          width = NULL,
@@ -97,7 +97,7 @@ ai_mainbar <- mainPanel(width = 12,
                                                                          actionButton("confirm_rf","Confirm")
                                                                     )
                                                           ),
-                                                          tabPanel( "Linear_Regression", 
+                                                          shiny::tabPanel( "Linear_Regression", 
                                                                     width = NULL,
                                                                     box( title = "Tuning Parameter", 
                                                                          width = NULL,

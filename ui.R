@@ -6,10 +6,11 @@ source("metadata.R")
 source("siderbar_func.R")
 source("ai.R")
 source("dashboard.R")
+source("feature.R")
 
 ui <-  dashboardPagePlus(skin  = "green-light",
   header =  create_header(),
-  sidebar =   shinydashboard::dashboardSidebar(disable = FALSE, collapsed = FALSE,  
+  sidebar =   shinydashboard::dashboardSidebar(disable = FALSE, collapsed = FALSE,
      sidebarMenu(id = 'tabs', icon = icon("home"),
                             menuItem("Dashboard", tabName = "dashboard", icon = icon("home")),
                             menuItem("BioMeta", tabName = "BioMeta", icon = icon("moon")),
@@ -22,14 +23,14 @@ ui <-  dashboardPagePlus(skin  = "green-light",
                                               br(),
                                               box(title = "Condition 1",width = "100%",
                                               selectInput("filterCondition1","Please select a column.",choices = NA),
-                                              selectInput("relationCondition1","Please select a relation", 
+                                              selectInput("relationCondition1","Please select a relation",
                                                           choices = c(">","<","==","<>","<=",">=","in")),
-                                              textInput("valueCondition1", "Please type in a value.") 
+                                              textInput("valueCondition1", "Please type in a value.")
                                               ),
                                               selectInput("joinRelation","Select a relation.", choices = c("And","Or")),
                                               box(title = "Condition 2",width = "100%",
                                                 selectInput("filterCondition2","Please select a column.",choices = NA),
-                                                selectInput("relationCondition2","Please select a relation", 
+                                                selectInput("relationCondition2","Please select a relation",
                                                             choices = c(">","<","==","<>","<=",">=","in")),
                                                 textInput("valueCondition2", "Please type in a value.")
                                               ),
@@ -37,15 +38,16 @@ ui <-  dashboardPagePlus(skin  = "green-light",
                                                               ),
                                                        column(3,  actionButton("offsetFilter","Offset")
                                                               ))
-                                             
+
           ),
+  #browser(),
   body =   dashboardBody(#useShinyjs(),
                           #useShinyjs(),
       tabItems(
         tabItem(tabName = "dashboard",
                 dashboard_mainbar
         ),
-        
+
         tabItem(tabName = "BioMeta",
                 metadata_sidebar,
                 metadata_mainbar
@@ -57,6 +59,6 @@ ui <-  dashboardPagePlus(skin  = "green-light",
                 ai_mainbar
                 )
       )
-    
+
   )
 )

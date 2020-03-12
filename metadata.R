@@ -53,12 +53,12 @@ metadata_mainbar <- mainPanel(
     tabBox(
       title = NULL,
       id = "tabset1", width = NULL,
-      tabPanel(
+      shiny::tabPanel(
         "DataTable_Meta", width = NULL,
                div(style = 'overflow-x: scroll; overflow-y: scroll;', 
         DT::dataTableOutput("meta_table"))
       ),
-      tabPanel("DataTable_Continuous",
+      shiny::tabPanel("DataTable_Continuous",
               box(title = "Numeric variable", width= NULL,
                   id = "meta1",
                   fluidRow(column(7,
@@ -80,7 +80,7 @@ metadata_mainbar <- mainPanel(
                            )
               )
               ),
-      tabPanel("DataTable_Discrete",
+      shiny::tabPanel("DataTable_Discrete",
                box(title = "Categorical variable", width= NULL,
                    id = "meta2",
                    fluidRow(column(7,
@@ -106,7 +106,7 @@ metadata_mainbar <- mainPanel(
                       tabBox(
                         title = NULL,
                         id = "meta3", width = NULL,
-                        tabPanel("Corelation", width = NULL,
+                        shiny::tabPanel("Corelation", width = NULL,
                                  selectInput("metadata_corelation_xs", 
                                     "Please select a variable.", 
                                     choices = NA,
@@ -114,7 +114,7 @@ metadata_mainbar <- mainPanel(
                                 actionButton("confirmCorelationMeta", "Confirm"),
                                 downloadButton("downloadDataCorelation", "Download")
                               ),
-                      tabPanel("Regression", width = NULL,
+                        shiny::tabPanel("Regression", width = NULL,
                                
                                selectInput("metadata_regression_y", 
                                            "Please select a variable.", 
@@ -128,7 +128,7 @@ metadata_mainbar <- mainPanel(
                                actionButton("confirmRegressMeta", "Confirm"),
                                downloadButton("downloadData", "Download")
                       ),
-                      tabPanel("Chi-Square Analysis", width = NULL,
+                      shiny::tabPanel("Chi-Square Analysis", width = NULL,
                                selectInput("chi_square_xs", 
                                            "Please select a variable.", 
                                            choices = NA,

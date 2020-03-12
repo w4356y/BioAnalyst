@@ -45,9 +45,9 @@ body_ui <- function() {
 
 create_header <- function(){
   header = dashboardHeaderPlus(
-    enable_rightsidebar = TRUE,title =  "BioAnalyst",
+    enable_rightsidebar = TRUE, title =  "BioAnalyst",
     rightSidebarIcon = "gears" ,
-    left_menu = tagList(
+    left_menu = shiny::tagList(
       # dropdownBlock(
       #   id = "mydropdown",
       #   title = "Dropdown 1",
@@ -69,7 +69,7 @@ create_header <- function(){
                     #taskItem(value = 20, color = "aqua", "Refactor code"),
                     textInput("login.user","User ID"),
                     textInput("login.password","Password"),
-                    textInput("anhao","°µºÅ")
+                    textInput("anhao","æš—å·")
       )
       # dropdownBlock(
       #   id = "mydropdown2",
