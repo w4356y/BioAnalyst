@@ -1,0 +1,18 @@
+Package: BioAnalyst
+Title: A shiny app for biological data analysis and basic
+    modeling.
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Wei",
+           family = "Jiang",
+           role = c("aut", "cre"),
+           email = "w4356y@163.com")
+Description: To be Added.
+License: Apache License
+Depends: 
+    R (> 3.6)
+Encoding: UTF-8
+Language: es
+LazyData: true
+Imports: 
+    ggplot2
