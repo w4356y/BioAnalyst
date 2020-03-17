@@ -58,8 +58,11 @@ feature_mainbar <- mainPanel(width = 12,
              ),
              fluidRow(
                column(5, selectInput("cols_to_discard","Select columns to be discarded.", choices = NA, selectize = TRUE,
-                                     multiple = T)),
-               column(5, actionButton("remove_cols", 'Confirm to remove'))
+                                     multiple = T),
+                      actionButton("removeCols", 'Confirm to remove')),
+               column(5,
+                      radioButtons("transpose_or_not","Transpose?", choices = c(TRUE, FALSE), selected = FALSE, inline = T),
+                      actionButton("confirmTranspose", 'Confirm to transpose'))
              ),
              column(5, actionButton("featureDetection", 'Detection'))
            ),
@@ -840,4 +843,52 @@ create_obs_fillNA <- function(input, output){
   return(event)
 }
 
+
+create_Feature_removeCols <- function(input, output, rv){
+  event <- observeEvent(input$removeCols, {
+    req(rv$data)
+    req(input$cols_to_discard)
+    req(input$cols_to_discard != "")
+    for(col in input$cols_to_discard){
+      rv$data[[col]] = NULL
+    }
+    #diff_sig = rv$diff_sig
+    #rv$diff_status = rv$diff_status - 1
+    output$feature_table <- DT::renderDataTable({
+      #browser()
+      DT::datatable(rv$data, 
+                    extensions = 'Buttons', 
+                    options = list(
+                      pageLength = 8,
+                      dom = 'Bfrtip',
+                      buttons = c('print','excel')
+                    )
+      )
+    })
+    
+  })
+  
+}
+
+create_Feature_ConfirmTranspose <- function(input, output, rv){
+  event <- observeEvent(input$confirmTranspose,{
+    req(input$transpose_or_not == TRUE)
+    cols = rv$data[[input$id_feature]]
+    rv$data = t(rv$data) %>% as.data.frame()
+    colnames(rv$data) = cols
+    #browser()
+    output$feature_table <- DT::renderDataTable({
+      #browser()
+      DT::datatable(rv$data, 
+                    extensions = 'Buttons', 
+                    options = list(
+                      pageLength = 8,
+                      dom = 'Bfrtip',
+                      buttons = c('print','excel')
+                    )
+      )
+    })
+  })
+  
+}
 
