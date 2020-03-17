@@ -54,10 +54,14 @@ feature_mainbar <- mainPanel(width = 12,
                                   ".xlsx")),
              fluidRow(
                column(5, actionButton("confirmFeatureFile","Confirm")),
-               column(5, actionButton("featureDetection", 'Detection'))
+               column(5, selectInput("id_feature","Please specify the sample ID.", choice = NA))
              ),
-
-             selectInput("id_feature","Please specify the sample ID.", choice = NA)
+             fluidRow(
+               column(5, selectInput("cols_to_discard","Select columns to be discarded.", choices = NA, selectize = TRUE,
+                                     multiple = T)),
+               column(5, actionButton("remove_cols", 'Confirm to remove'))
+             ),
+             column(5, actionButton("featureDetection", 'Detection'))
            ),
           fluidRow(column(6, 
                           box(title = "NA Filtering",
@@ -194,6 +198,7 @@ create_Feature_confirmFeatureFile <- function(input = input, output = output, rv
     }
     )
     updateSelectInput(session = session, "id_feature", choice = colnames(df))
+    updateSelectInput(session = session, "cols_to_discard", choice = colnames(df))
   })
   
   
