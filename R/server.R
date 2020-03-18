@@ -153,13 +153,13 @@ server <- function(input, output, session) {
                                      session = session,
                                      rv_meta = rv_meta,
                                      rv = rv_feature)
-  create_Feature_removeCols(input = input,
+  create_Feature_Prepare(input = input,
                             output = output,
                             rv = rv_feature)
   
-  # create_Feature_ConfirmTranspose(input = input,
-  #                                 output = output,
-  #                                 rv = rv_feature)
+  create_Feature_CancelPrepare(input = input,
+                                  output = output,
+                                  rv = rv_feature)
 
   create_obs_nextPage(input = input,
                       output = output,

@@ -57,13 +57,19 @@ feature_mainbar <- mainPanel(width = 12,
                column(5, selectInput("id_feature","Please specify the sample ID.", choice = NA))
              ),
              fluidRow(
-               column(5, selectInput("cols_to_discard","Select columns to be discarded.", choices = NA, selectize = TRUE,
-                                     multiple = T),
-                      actionButton("removeCols", 'Confirm to remove')),
+               column(5,  
+                  actionButton("Prepare", 'Prepare'),
+                  br(),
+                  br(),
+                  br(),
+                  actionButton("CancelPrepare", 'Cancel Prepare')
+               ),
+                      
                column(5,
                       radioButtons("transpose_or_not","Transpose?", choices = c(TRUE, FALSE), selected = FALSE, inline = T),
-                      actionButton("confirmTranspose", 'Confirm to transpose'))
-             ),
+                      selectInput("cols_to_discard","Select columns to be discarded.", choices = NA, selectize = TRUE,
+                                  multiple = T)
+             )),
              column(5, actionButton("featureDetection", 'Detection'))
            ),
           fluidRow(column(6, 
@@ -211,14 +217,14 @@ create_Feature_confirmFeatureFile <- function(input = input, output = output, rv
 create_Feature_featureDetection <- function(input = input, output = output, rv = rv, session = session){
   event <- observeEvent(input$featureDetection, {
     req(rv$data)
-    sample_id = rv$data[[input$id_feature]]
-    req(sample_id)
-    if(sum(duplicated(sample_id)) > 0){
-      showNotification("Sample ID wrong!","Please select a unique id.")
-    }
-    req(sum(duplicated(sample_id)) == 0)
-    row.names(rv$data) = sample_id
-    rv$data[[input$id_feature]] = NULL
+    #sample_id = rv$data[[input$id_feature]]
+    #req(sample_id)
+    #if(sum(duplicated(sample_id)) > 0){
+    #  showNotification("Sample ID wrong!","Please select a unique id.")
+    #}
+    #req(sum(duplicated(sample_id)) == 0)
+    #row.names(rv$data) = sample_id
+    #rv$data[[input$id_feature]] = NULL
     #browser()
     showTab(inputId = "tabset2", target =  "Stat_sample", session = session)
     showTab(inputId = "tabset2", target =  "Stat_feature", session = session)
@@ -227,7 +233,7 @@ create_Feature_featureDetection <- function(input = input, output = output, rv =
     x_mean = apply(rv$data, 1, function(x) mean(as.numeric(x[x != "NA"])[!is.na(as.numeric(x[x != "NA"]))]))
     x_med = apply(rv$data, 1, function(x) median(as.numeric(x[x != "NA"])[!is.na(as.numeric(x[x != "NA"]))]))
     x_na = apply(rv$data, 1, function(x)   length(x[x == "NA"])/ncol(rv$data))
-    x_stat = data.frame(samples = sample_id,
+    x_stat = data.frame(samples = row.names(rv$data),
                        min = x_min,
                        max = x_max,
                        mean = round(x_mean, 2),
@@ -248,7 +254,7 @@ create_Feature_featureDetection <- function(input = input, output = output, rv =
     output$feature_plot_sample = renderPlot({   
       hist(x_na, main = "", xlab = "")
     })
-    
+    #browser()
     y_max = apply(rv$data, 2, function(x) max(as.numeric(x[x != "NA"])[!is.na(as.numeric(x[x != "NA"]))]))
     y_min = apply(rv$data, 2, function(x) min(as.numeric(x[x != "NA"])[!is.na(as.numeric(x[x != "NA"]))]))
     y_mean = apply(rv$data, 2, function(x) mean(as.numeric(x[x != "NA"])[!is.na(as.numeric(x[x != "NA"]))]))
@@ -387,24 +393,29 @@ create_Feature_confirmFillNA <- function(input = input, output = output, rv = rv
   event <- observeEvent(input$confirmFillNA,{
     req(rv$data)
     rv$fill_bak = rv$data
+    
+    rv$data = sapply(rv$data, function(x) suppressWarnings(as.numeric(as.character(x)))) %>% as.data.frame()
+    row.names(rv$data) = row.names(rv$fill_bak)
+    #browser()
     if(input$fillNAmethod == "constant"){
       req(input$fillFeatureNA)
-      rv$data[rv$data == "NA"] = as.numeric(input$fillFeatureNA)
+      rv$data[is.na(rv$data) | rv$data == "NA"] = suppressWarnings(as.numeric(input$fillFeatureNA))
+      #browser()
     }else if(input$fillNAmethod == "row_mean"){
       #browser()
-      rv$data = apply(rv$data, 1, function(x) ifelse(x == "NA", mean(as.numeric(x[x != "NA"])), x)) %>% t() %>% as.data.frame()
+      rv$data = apply(rv$data, 1, function(x) ifelse(x == "NA" | is.na(x), mean(as.numeric(x[x != "NA" & !is.na(x)])), x)) %>% t() %>% as.data.frame()
     }else if(input$fillNAmethod == "col_mean"){
-      rv$data = apply(rv$data, 2, function(x) ifelse(x == "NA", mean(as.numeric(x[x != "NA"])), x))
+      rv$data = apply(rv$data, 2, function(x) ifelse(x == "NA" | is.na(x), mean(as.numeric(x[x != "NA" & !is.na(x)])), x))
     }else if(input$fillNAmethod == "col_min"){
-      rv$data = apply(rv$data, 2, function(x) ifelse(x == "NA", min(as.numeric(x[x != "NA"])), x))
+      rv$data = apply(rv$data, 2, function(x) ifelse(x == "NA" | is.na(x), min(as.numeric(x[x != "NA" & !is.na(x)])), x))
     }else if(input$fillNAmethod == "col_max"){
-      rv$data = apply(rv$data, 2, function(x) ifelse(x == "NA", max(as.numeric(x[x != "NA"])), x))
+      rv$data = apply(rv$data, 2, function(x) ifelse(x == "NA" | is.na(x), max(as.numeric(x[x != "NA" & !is.na(x)])), x))
     }else if(input$fillNAmethod == "row_max"){
-      rv$data = apply(rv$data, 1, function(x) ifelse(x == "NA", max(as.numeric(x[x != "NA"])), x)) %>% t() %>% as.data.frame()
+      rv$data = apply(rv$data, 1, function(x) ifelse(x == "NA" | is.na(x), max(as.numeric(x[x != "NA" & !is.na(x)])), x)) %>% t() %>% as.data.frame()
     }else if(input$fillNAmethod == "row_min"){
-      rv$data = apply(rv$data, 1, function(x) ifelse(x == "NA", min(as.numeric(x[x != "NA"])), x)) %>% t() %>% as.data.frame()
+      rv$data = apply(rv$data, 1, function(x) ifelse(x == "NA" | is.na(x), min(as.numeric(x[x != "NA" & !is.na(x)])), x)) %>% t() %>% as.data.frame()
     }else{}
-    rv$data[rv$data == "NA"] = as.numeric(input$fillFeatureNA)
+    #rv$data[rv$data == "NA"] = as.numeric(input$fillFeatureNA)
     output$feature_table <- DT::renderDataTable({
       #browser()
       DT::datatable(rv$data, 
@@ -844,14 +855,30 @@ create_obs_fillNA <- function(input, output){
 }
 
 
-create_Feature_removeCols <- function(input, output, rv){
-  event <- observeEvent(input$removeCols, {
+create_Feature_Prepare <- function(input, output, rv){
+  event <- observeEvent(input$Prepare, {
     req(rv$data)
-    req(input$cols_to_discard)
-    req(input$cols_to_discard != "")
-    for(col in input$cols_to_discard){
-      rv$data[[col]] = NULL
+    rv$data_bak = rv$data
+    sample_id = rv$data[[input$id_feature]]
+    if(sum(duplicated(sample_id)) > 0){
+      showNotification("Sample ID wrong!","Please select a unique id.")
     }
+    if(input$cols_to_discard != ""){
+      for(col in input$cols_to_discard){
+        rv$data[[col]] = NULL
+      }
+    }
+    req(sum(duplicated(sample_id)) == 0)
+    if(input$transpose_or_not == TRUE){
+      row.names(rv$data) = sample_id
+      rv$data[[input$id_feature]] = NULL
+      rv$data = t(rv$data) %>% as.data.frame()
+      colnames(rv$data) = sample_id
+    }else{
+      row.names(rv$data) = rv$data[[input$id_feature]]
+      rv$data[[input$id_feature]] = NULL
+    }
+    
     #diff_sig = rv$diff_sig
     #rv$diff_status = rv$diff_status - 1
     output$feature_table <- DT::renderDataTable({
@@ -870,13 +897,10 @@ create_Feature_removeCols <- function(input, output, rv){
   
 }
 
-create_Feature_ConfirmTranspose <- function(input, output, rv){
-  event <- observeEvent(input$confirmTranspose,{
-    req(input$transpose_or_not == TRUE)
-    cols = rv$data[[input$id_feature]]
-    rv$data = t(rv$data) %>% as.data.frame()
-    colnames(rv$data) = cols
-    #browser()
+create_Feature_CancelPrepare <- function(input, output, rv){
+  event <- observeEvent(input$CancelPrepare,{
+    req(rv$data_bak)
+    rv$data = rv$data_bak
     output$feature_table <- DT::renderDataTable({
       #browser()
       DT::datatable(rv$data, 
