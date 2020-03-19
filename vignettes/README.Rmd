@@ -21,10 +21,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of mn.crd.app is to provide a semi-automation tool for evaluation of the health parameters from hospital database and 
-automated .docx report creation.
 
-[Copyright Metanotitia, 2020](/LICENSE.md)
 
 ## Installation
 
