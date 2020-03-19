@@ -1,3 +1,3 @@
 dashboard_mainbar <- tagList(
-  tags$img(src="under_construction.png", style = 'width: 100%;')
+  tags$img(src="welcome.jpg", style = 'width: 100%;')
 )

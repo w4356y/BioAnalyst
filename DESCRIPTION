@@ -15,7 +15,11 @@ Encoding: UTF-8
 Language: es
 LazyData: true
 Imports: 
-    ggplot2
+    ggplot2,
+    shinyWidgets,
+    shinydashboardPlus,
+    shinydashboard,
+    shiny
 Suggests: 
     knitr,
     rmarkdown,
