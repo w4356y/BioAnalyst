@@ -1,0 +1,47 @@
+---
+title: "README"
+author: "Weijiang"
+date: "2020/3/19"
+output: html_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# BioAnalyst
+
+<!-- badges: start -->
+[![Build Status](https://travis-ci.com/kbajdzienko/mn.crd.app.svg?token=EXLmQ5prppsE3ZXzWHeJ&branch=master)](https://travis-ci.com/kbajdzienko/mn.crd.app)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
+The goal of mn.crd.app is to provide a semi-automation tool for evaluation of the health parameters from hospital database and 
+automated .docx report creation.
+
+[Copyright Metanotitia, 2020](/LICENSE.md)
+
+## Installation
+
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+```{r eval=FALSE}
+ install.packages("devtools")
+ devtools::install_github("w4356y/BioAnalyst")
+```
+## Example
+
+This is a basic example which shows you how to run current development version of the app:
+
+```{r eval=FALSE}
+library(BioAnalyst)
+ 
+# Run the application
+runApp()
+```
