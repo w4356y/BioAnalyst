@@ -466,11 +466,11 @@ create_Feature_confirmTransform <- function(input = input, output = output, rv =
     rv$transform_bak = rv$data
     #browser()
     if(input$transformMethod == "log"){
-      rv$data = apply(rv$data, 2, as.numeric)  %>% log10 %>% as.data.frame()
+      rv$data = apply(rv$data, 2, function(x) log(as.numeric(x) + 1)) %>% as.data.frame()
     }else if(input$transformMethod == "log2"){
-      rv$data = apply(rv$data, 2, as.numeric)  %>% log10 %>% as.data.frame()
+      rv$data = apply(rv$data, 2, function(x) log2(as.numeric(x) + 1)) %>% as.data.frame()
     }else if(input$transformMethod == "log10"){
-      rv$data = apply(rv$data, 2, as.numeric)  %>% log10 %>% as.data.frame()
+      rv$data = apply(rv$data, 2, function(x) log10(as.numeric(x) + 1)) %>% as.data.frame()
     }else{
       
     }
@@ -531,6 +531,7 @@ create_Feature_confirmPCA <- function(input = input, output = output, rv = rv, s
       
     }
     req(rv$fillNA_status  == 1)
+    #browser()
     #rv$data = apply(rv$data, 2, as.numeric)  %>% as.data.frame()
     if(input$axis == "X"){
       pca = prcomp(rv$data, center = as.logical(input$center_or_not), 
