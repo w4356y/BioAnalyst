@@ -1,51 +1,58 @@
-source("R/metadata.R", encoding = "UTF-8")
-source("R/feature.R", encoding = "UTF-8")
+source("R/metadata.R", 
+       encoding = "UTF-8"
+       )
+source("R/feature.R", 
+       encoding = "UTF-8"
+       )
 navBar_ui <- function(){
-  tagList(
+  shiny::tagList(
   #golem_add_external_resources(),
-  bs4Dash::bs4DashPage(
-    tagList(
-      bs4Dash::bs4DashNavbar(
-        skin = "light",
-        title = 'Research Analysis',
-        id = "sidebar_bra",
+    bs4Dash::bs4DashPage(
+      tagList(
+        bs4Dash::bs4DashNavbar(
+          skin = "light",
+          title = 'Research Analysis',
+          id = "sidebar_bra",
           bs4Dash::menuItem(
             tabName = "parameter_review",
             metadata_sidebar,
             icon = 'heartbeat',
             "Parameter Review"
-          ),
+            ),
           bs4Dash::menuItem(
             tabName = "user_input",
             icon = 'keyboard',
             "Manual Input"
+            )
           )
         )
-      )   
+      )
     )
-)
+  
 }
 
 
 
 body_ui <- function() {
   bs4Dash::bs4DashBody(
-  bs4Dash::bs4TabItems( #add new tabItems in the sidebar -> rstudioapi::navigateToFile('R/mod_sidebar.R')
-    bs4Dash::bs4TabItem(
-      tabName = "dashboard"
-    ),
-    bs4Dash::bs4TabItem(
-      tabName = 'parameter_review',
-      metadata_mainbar
+    bs4Dash::bs4TabItems( 
+      #add new tabItems in the sidebar -> rstudioapi::navigateToFile('R/mod_sidebar.R')
+      bs4Dash::bs4TabItem(
+        tabName = "dashboard"
+        ),
+      bs4Dash::bs4TabItem(
+        tabName = 'parameter_review',
+        metadata_mainbar
       #mod_parameter_review_ui("parameter_review_ui_1")
-    )
+      )
+      )
   )
-) 
-}
+  }
 
 create_header <- function(){
-  header = dashboardHeaderPlus(
-    enable_rightsidebar = TRUE, title =  "BioAnalyst",
+  header = shinydashboardPlus::dashboardHeaderPlus(
+    enable_rightsidebar = TRUE, 
+    title =  "BioAnalyst",
     rightSidebarIcon = "gears" ,
     left_menu = shiny::tagList(
       # dropdownBlock(
@@ -65,12 +72,14 @@ create_header <- function(){
       #     icon_off = icon("remove")
       #   )
       # ),
-      dropdownBlock(id = "login",title = "Login",
+      shinydashboardPlus::dropdownBlock(
+        id = "login",
+        title = "Login",
                     #taskItem(value = 20, color = "aqua", "Refactor code"),
-                    textInput("login.user","User ID"),
-                    textInput("login.password","Password"),
-                    textInput("anhao","Verify Code"),
-                    actionButton("confirmLogin","Log In")
+        textInput("login.user","User ID"),
+        textInput("login.password","Password"),
+        textInput("anhao","Verify Code"),
+        actionButton("confirmLogin","Log In")
       )
       # dropdownBlock(
       #   id = "mydropdown2",
