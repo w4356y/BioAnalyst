@@ -12,6 +12,9 @@ server <- function(input, output, session) {
   hideTab(inputId = "tabset1", target =  "DataTable_Discrete", session = session)
   hideTab(inputId = "tabset2", target =  "Stat_sample", session = session)
   hideTab(inputId = "tabset2", target =  "Stat_feature", session = session)
+  shinyjs::hide(selector = "a[data-value = 'BioMeta']")
+  shinyjs::hide(selector = "a[data-value = 'BioAnalysis']")
+  shinyjs::hide(selector = "a[data-value = 'BioAI']")
 
   create_Metadata_ReadConfirm(input = input,
                               output = output,
