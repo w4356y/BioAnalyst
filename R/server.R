@@ -1,5 +1,5 @@
 library(shiny)
-source('configuration.R')
+source('R/configuration.R', encoding = "UTF-8")
 server <- function(input, output, session) {
   setBookmarkExclude(c("Bookmark"))
   enableBookmarking(store = "url")

@@ -1,3 +1,14 @@
+#' Read files of different format
+#'
+#' Technically this returns the data frame of the uploaded file of various format(csv, xlsx, txt).
+#' To be noted that this function was firstly created by Krzysztof Bajdzienko(https://github.com/kbajdzienko).
+#' 
+#' @return A data frame
+#' @export
+#' @seealso [readxl::reax_xlsx],[readr::read_csv] which this function wraps.
+#' @examples
+#' read_delimKB(path)
+
 read_delimKB <- function(path){
   
   require(stringr)

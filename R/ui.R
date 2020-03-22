@@ -2,11 +2,11 @@ library(shiny)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(shinyWidgets)
-source("metadata.R")
-source("siderbar_func.R")
-source("ai.R")
-source("dashboard.R")
-source("feature.R")
+source("R/metadata.R", encoding = "UTF-8")
+source("R/siderbar_func.R", encoding = "UTF-8")
+source("R/ai.R", encoding = "UTF-8")
+source("R/dashboard.R", encoding = "UTF-8")
+source("R/feature.R", encoding = "UTF-8")
 
 ui <-  dashboardPagePlus(skin  = "green-light",
   header =  create_header(),

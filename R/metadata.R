@@ -1,3 +1,4 @@
+source("R/functions.R", encoding = "UTF-8")
 metadata_sidebar <- sidebarPanel(
   h1("Metadata"),
   hr(),
@@ -154,7 +155,7 @@ metadata_mainbar <- mainPanel(
 
 
 
-source("functions.R")
+
 
 create_Metadata_ReadConfirm <- function(input, output, session, rv){
   event <- observeEvent(input$confirmMetaFile,{

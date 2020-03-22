@@ -1,5 +1,5 @@
-source("metadata.R")
-source("feature.R")
+source("R/metadata.R", encoding = "UTF-8")
+source("R/feature.R", encoding = "UTF-8")
 navBar_ui <- function(){
   tagList(
   #golem_add_external_resources(),
