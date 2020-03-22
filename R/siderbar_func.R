@@ -69,7 +69,8 @@ create_header <- function(){
                     #taskItem(value = 20, color = "aqua", "Refactor code"),
                     textInput("login.user","User ID"),
                     textInput("login.password","Password"),
-                    textInput("anhao","暗号")
+                    textInput("anhao","Verify Code"),
+                    actionButton("confirmLogin","Log In")
       )
       # dropdownBlock(
       #   id = "mydropdown2",

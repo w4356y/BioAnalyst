@@ -1,5 +1,6 @@
 library(shiny)
 source('R/configuration.R', encoding = "UTF-8")
+source('R/login.R', encoding = "UTF-8")
 server <- function(input, output, session) {
   setBookmarkExclude(c("Bookmark"))
   enableBookmarking(store = "url")
@@ -15,7 +16,12 @@ server <- function(input, output, session) {
   shinyjs::hide(selector = "a[data-value = 'BioMeta']")
   shinyjs::hide(selector = "a[data-value = 'BioAnalysis']")
   shinyjs::hide(selector = "a[data-value = 'BioAI']")
-
+  
+  
+  create_login_confirm(session = session,
+                       input = input,
+                       output = output)
+  
   create_Metadata_ReadConfirm(input = input,
                               output = output,
                               session = session,
