@@ -1,157 +1,230 @@
-source("R/functions.R", encoding = "UTF-8")
+source("R/functions.R", 
+       encoding = "UTF-8"
+       )
 metadata_sidebar <- sidebarPanel(
   h1("Metadata"),
   hr(),
   br(),
-  box(title = "", 
-      width = 20,
-      fileInput("metadata_file",
-                          "Choose a file",
-                          multiple = F, 
-                          accept = c(".csv",
-                                     ".txt",
-                                     ".xlsx")),
-      fluidRow(
-        column(5, actionButton("confirmMetaFile","Confirm")),
-        column(5, actionButton("metaDetection", 'Detection'))
-      ),
-      selectInput("metadata_id", 
-                  "Please specify the column as sample id", 
-                  choices = NA
-      ),
-      fluidRow(
-        column(5, actionButton("summaryMetaFile",'Summary')),
-        column(5, actionButton("test", 'test'))
-      )
-      ),
-  helpText("Any problem, please contact Wei(W4356y@163.com)."),
-  verbatimTextOutput("textMeta",placeholder = FALSE),
-  tags$head(tags$style("#textMeta{color: red;
+  shinydashboard::box(title = "", 
+                      width = 20,
+                      shiny::fileInput("metadata_file",
+                                       "Choose a file",
+                                       multiple = F, 
+                                       accept = c(".csv",
+                                                  ".txt",
+                                                  ".xlsx"
+                                                  )
+                                       ),
+                      fluidRow(
+                        column(5, 
+                               actionButton("confirmMetaFile",
+                                            "Confirm"
+                                            )
+                               ),
+                        column(5, 
+                               actionButton("metaDetection", 
+                                            'Detection')
+                               )
+                        ),
+                      shiny::selectInput("metadata_id", 
+                                         "Please specify the column as sample id", 
+                                         choices = NA
+                                         ),
+                      fluidRow(
+                        column(5, 
+                               actionButton("summaryMetaFile",
+                                            'Summary')
+                               ),
+                        column(5, 
+                               actionButton("test", 
+                                            'test'
+                                            )
+                               )
+                        )
+                      ),
+  shiny::helpText("Any problem, please contact Wei(W4356y@163.com)."),
+  shiny::verbatimTextOutput("textMeta", 
+                     placeholder = FALSE
+                     ),
+                     tags$head(tags$style("#textMeta{color: red;
                                  font-size: 15px;
                                  font-style: bold;
                                  }"
+                        )
+                      ),
+  shinydashboard::box(title = "", 
+                      width = 20,
+                      shiny::selectInput("remove_ColNA", 
+                                         "Select columns to remove NA values.", 
+                                         choice = NA,
+                                         selectize = TRUE, 
+                                         multiple = TRUE
+                                         ),
+                      shiny::actionButton("confirmRemoveNA", 
+                                          "Remove"
+                                          ),
+                      shiny::selectInput("fillna_ColMeta", 
+                                         "Select a column.", 
+                                         choice = NA
+                                         ),
+                      shiny::textInput("fillna_ValueMeta", 
+                                       "Type in a value to fill NA."
+                                       ),
+                      shiny::actionButton("confirmFillna", 
+                                          "Confirm"
+                                          )
+                      )
   )
-  ),
-  box(title = "", 
-      width = 20,
-      selectInput("remove_ColNA", "Select columns to remove NA values.", choice = NA,
-                  selectize = TRUE, multiple = TRUE),
-      actionButton("confirmRemoveNA", "Remove"),
-      selectInput("fillna_ColMeta", "Select a column.", choice = NA),
-      textInput("fillna_ValueMeta", "Type in a value to fill NA."),
-      actionButton("confirmFillna", "Confirm")
-  )
-  
-)
 
 
 
 metadata_mainbar <- mainPanel(
-  box(
+  shinydashboard::box(
     title = "", 
     width = NULL, 
     status = "primary",
-    tabBox(
+    shinydashboard::tabBox(
       title = NULL,
-      id = "tabset1", width = NULL,
+      id = "tabset1", 
+      width = NULL,
       shiny::tabPanel(
-        "DataTable_Meta", width = NULL,
-               div(style = 'overflow-x: scroll; overflow-y: scroll;', 
-        DT::dataTableOutput("meta_table"))
-      ),
-      shiny::tabPanel("DataTable_Continuous",
-              box(title = "Numeric variable", width= NULL,
-                  id = "meta1",
-                  fluidRow(column(7,
-                                  DT::dataTableOutput("meta_stat_continuous")
-                                  ),
-                           column(5,
-                                  fluidRow(column(8,
-                                                  selectInput("select_continuousVariable","Select a variable", 
-                                                              choice = NA)
-                                  ),
-                                  column(3,
-                                         actionButton("confirmHist","Hist"))
-                                  ),
+        "DataTable_Meta", 
+        width = NULL,
+        div(style = 'overflow-x: scroll; overflow-y: scroll;', 
+            DT::dataTableOutput("meta_table")
+            )
+        ),
+      shiny::tabPanel(
+        "DataTable_Continuous",
+        shinydashboard::box(
+          title = "Numeric variable", 
+          width= NULL,
+          id = "meta1",
+          fluidRow(column(7,
+                          DT::dataTableOutput("meta_stat_continuous")
+                          ),
+                  column(5,
+                          fluidRow(
+                          column(8,
+                                 selectInput(
+                                   "select_continuousVariable",
+                                    "Select a variable", 
+                                    choice = NA
+                                      )
+                                    ),
+                          column(3,
+                                 actionButton(
+                                   "confirmHist",
+                                   "Hist"
+                                   )
+                                 )
+                          ),
                                   # selectInput("select_continuousVariable","Select a variable", 
                                   #             choice = NA),
                                   # actionButton("confirmHist","Hist"),
-                                  plotOutput("continuous_plot_meta",width = "250px", height = "230px")
-                           )
-                           )
-              )
-              ),
-      shiny::tabPanel("DataTable_Discrete",
-               box(title = "Categorical variable", width= NULL,
-                   id = "meta2",
-                   fluidRow(column(7,
-                                   DT::dataTableOutput("meta_stat_discrete")
+                         shiny::plotOutput("continuous_plot_meta", 
+                                           width = "250px", 
+                                           height = "230px")
+                         )
+                  )
+          )
+        ),
+      shiny::tabPanel(
+        "DataTable_Discrete",
+        shinydashboard::box(
+          title = "Categorical variable", 
+          width= NULL,
+          id = "meta2",
+          fluidRow(
+            column(7, 
+                   DT::dataTableOutput("meta_stat_discrete")
                    ),
-                   column(5,
-                          fluidRow(column(8,
-                                          selectInput("select_discreteVariable","Select a variable", 
-                                                      choice = NA)
-                                          ),
-                                   column(3,
-                                          actionButton("confirmPie","Pie"))),
-                          plotOutput("discrete_plot_meta",width = "250px", height = "230px")
+            column(5,
+                   fluidRow(column(8,
+                                   shiny::selectInput("select_discreteVariable",
+                                                      "Select a variable", 
+                                                       choice = NA
+                                                      )
+                                   ),
+                            column(3,
+                                   shiny::actionButton("confirmPie","Pie")
+                                   )
+                            ),
+                   shiny::plotOutput("discrete_plot_meta", 
+                                     width = "250px", 
+                                     height = "230px"
+                                     )
                    )
-                   )
-               )
+            )
+          )
+        )
       )
-      )
-  ),
+    ),
   fluidRow(column(4,
-                  box(title = "Regression Analysis", 
-                      width = 20,
-                      tabBox(
-                        title = NULL,
-                        id = "meta3", width = NULL,
-                        shiny::tabPanel("Corelation", width = NULL,
-                                 selectInput("metadata_corelation_xs", 
-                                    "Please select a variable.", 
-                                    choices = NA,
-                                    selectize = TRUE, multiple = TRUE),
-                                actionButton("confirmCorelationMeta", "Confirm"),
-                                downloadButton("downloadDataCorelation", "Download")
-                              ),
-                        shiny::tabPanel("Regression", width = NULL,
-                               
-                               selectInput("metadata_regression_y", 
-                                           "Please select a variable.", 
-                                           choices = NA
-                               ),
-                               selectInput("metadata_regression_xs", 
-                                           "Please select a variable.", 
-                                           choices = NA,
-                                           selectize = TRUE
-                               ),
-                               actionButton("confirmRegressMeta", "Confirm"),
-                               downloadButton("downloadData", "Download")
-                      ),
-                      shiny::tabPanel("Chi-Square Analysis", width = NULL,
-                               selectInput("chi_square_xs", 
-                                           "Please select a variable.", 
-                                           choices = NA,
-                                           selectize = TRUE, multiple = TRUE),
-                               actionButton("confirmChi_test", "Confirm"),
-                               hr(),
-                               verbatimTextOutput("chi_result",placeholder = FALSE),
-                               verbatimTextOutput("chi_p",placeholder = FALSE)
+                  shinydashboard::box(title = "Regression Analysis", 
+                                      width = 20,
+                                      shinydashboard::tabBox(
+                                        title = NULL,
+                                        id = "meta3",
+                                        width = NULL,
+                                        shiny::tabPanel("Corelation", 
+                                                        width = NULL,
+                                                        shiny::selectInput("metadata_corelation_xs", 
+                                                                          "Please select a variable.", 
+                                                                          choices = NA,
+                                                                          selectize = TRUE, 
+                                                                          multiple = TRUE
+                                                                      ),
+                                                        shiny::actionButton("confirmCorelationMeta", 
+                                                                            "Confirm"),
+                                                        shiny::downloadButton("downloadDataCorelation", 
+                                                                            "Download")
+                                        ),
+                                        shiny::tabPanel("Regression", 
+                                                        width = NULL,
+                                                        shiny::selectInput("metadata_regression_y", 
+                                                                           "Please select a variable.", 
+                                                                           choices = NA),
+                                                        shiny::selectInput("metadata_regression_xs", 
+                                                                           "Please select a variable.", 
+                                                                           choices = NA,
+                                                                           selectize = TRUE
+                                                                           ),
+                                                        shiny::actionButton("confirmRegressMeta", "Confirm"
+                                                                            ),
+                                                        shiny::downloadButton("downloadData", "Download")
+                                                        ),
+                                        shiny::tabPanel("Chi-Square Analysis", 
+                                                        width = NULL,
+                                                        shiny::selectInput("chi_square_xs", 
+                                                                           "Please select a variable.", 
+                                                                           choices = NA,
+                                                                           selectize = TRUE, 
+                                                                           multiple = TRUE
+                                                                           ),
+                                                        shiny::actionButton("confirmChi_test", 
+                                                                            "Confirm"),
+                                                        hr(),
+                                                        shiny::verbatimTextOutput("chi_result", 
+                                                                                  placeholder = FALSE),
+                                                        shiny::verbatimTextOutput("chi_p", 
+                                                                                  placeholder = FALSE)
                                #downloadButton("downloadDataCorelation", "Download")
-                      )
-                  )
-                  )
+                               )
+                               )
+                               )
                   ),
-                  
            column(8,
-                  box(title = "", width = NULL,
-                      plotOutput("plot1",width = "auto", height = "400px")
-                      )
-                  
+                  shinydashboard::box(title = "", 
+                                      width = NULL,
+                                      shiny::plotOutput("plot1", 
+                                                        width = "auto", 
+                                                        height = "400px"
+                                                        )
+                                      )
                   )
- )
-)
+           )
+  )
 
 
 
