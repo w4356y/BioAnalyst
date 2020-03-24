@@ -1,22 +1,33 @@
 library(shiny)
-source('R/configuration.R', encoding = "UTF-8")
-source('R/login.R', encoding = "UTF-8")
-server <- function(input, output, session) {
-  setBookmarkExclude(c("Bookmark"))
-  enableBookmarking(store = "url")
+source('R/configuration.R', 
+       encoding = "UTF-8")
+source('R/login.R', 
+       encoding = "UTF-8")
+server <- function(input, 
+                   output, 
+                   session) {
+  #setBookmarkExclude(c("Bookmark"))
+  #enableBookmarking(store = "url")
   rv_meta <- reactiveValues()
   rv_feature <- reactiveValues()
   rv_ai <- reactiveValues()
   rv <- reactiveValues()
   
-  hideTab(inputId = "tabset1", target =  "DataTable_Continuous", session = session)
-  hideTab(inputId = "tabset1", target =  "DataTable_Discrete", session = session)
-  hideTab(inputId = "tabset2", target =  "Stat_sample", session = session)
-  hideTab(inputId = "tabset2", target =  "Stat_feature", session = session)
+  shiny::hideTab(inputId = "tabset1", 
+                 target =  "DataTable_Continuous", 
+                 session = session)
+  shiny::hideTab(inputId = "tabset1", 
+                 target =  "DataTable_Discrete", 
+                 session = session)
+  shiny::hideTab(inputId = "tabset2", 
+                 target =  "Stat_sample",
+                 session = session)
+  shiny::hideTab(inputId = "tabset2", 
+                 target =  "Stat_feature", 
+                 session = session)
   shinyjs::hide(selector = "a[data-value = 'BioMeta']")
   shinyjs::hide(selector = "a[data-value = 'BioAnalysis']")
   shinyjs::hide(selector = "a[data-value = 'BioAI']")
-  
   
   create_login_confirm(session = session,
                        input = input,
