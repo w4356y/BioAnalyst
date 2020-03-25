@@ -557,7 +557,7 @@ create_Feature_confirmRemoveFeatureNA <- function(input = input,
     req(rv$feature_stat)
     rv$feature_bak = rv$data
     #browser()
-    featureid = filter(rv$feature_stat, 
+    featureid = dplyr::filter(rv$feature_stat, 
                        na < input$proportion_feature/100) %>% pull(features)
     #browser()
     rv$data = rv$data  %>% select(featureid)
@@ -894,7 +894,7 @@ create_Feature_Join_meta_and_feature <- function(input = input,
     req(rv_meta$data)
     req(rv_feature$data)
     #  req(rv_meta$data)
-     overlap_id = intersect(rv_meta$data$id, 
+     overlap_id = base::intersect(rv_meta$data$id, 
                             row.names(rv_feature$data)
                             )
      if(length(overlap_id) == 0 ){
@@ -1016,7 +1016,7 @@ create_Feature_confirmHeatmap <- function(input = input,
     }
     req(rv_meta$data)
     req(rv_feature$data)
-    overlap_id = intersect(rv_meta$data$id, 
+    overlap_id = base::intersect(rv_meta$data$id, 
                            row.names(rv_feature$data))
     if(length(overlap_id) == 0 ){
       showNotification("Merge Error!",
@@ -1085,7 +1085,7 @@ create_Feature_confirmDifferential <- function(input = input,
     }
     req(rv_meta$data)
     req(rv_feature$data)
-    overlap_id = intersect(rv_meta$data$id, 
+    overlap_id = base::intersect(rv_meta$data$id, 
                            row.names(rv_feature$data))
     if(length(overlap_id) == 0 ){
       showNotification("Merge Error!",
@@ -1135,7 +1135,7 @@ create_Feature_confirmDifferential <- function(input = input,
     diff_stat = data.frame(feature = colnames(rv_feature$data),
                            p_value = stat_p)
     diff_sig = diff_stat %>% 
-      filter(p_value < as.numeric(input$p_signif))
+      dplyr::filter(p_value < as.numeric(input$p_signif))
     if(nrow(diff_sig) < 1){
       shiny::showNotification("No feature detected.",
                               "Plese couble check.")

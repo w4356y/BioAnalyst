@@ -277,8 +277,8 @@ create_Metadata_ReadConfirm <- function(input, output, session, rv){
 create_Metadata_Detection <- function(input, output, session, rv){
   event <- observeEvent(input$metaDetection,{
     #continuous_test = lapply(setdiff(colnames(rv$data), rv$unique_id), function(x) length(table(rv$data[[x]])) > 10) %>% unlist()
-    continuous_test = lapply(setdiff(colnames(rv$data), rv$unique_id), function(x) !is.na(mean(as.numeric(rv$data[[x]])[!is.na(as.numeric(rv$data[[x]]))]))) %>% unlist()
-    continuous_id = setdiff(colnames(rv$data), rv$unique_id)[which(continuous_test == TRUE)]
+    continuous_test = lapply(base::setdiff(colnames(rv$data), rv$unique_id), function(x) !is.na(mean(as.numeric(rv$data[[x]])[!is.na(as.numeric(rv$data[[x]]))]))) %>% unlist()
+    continuous_id = base::setdiff(colnames(rv$data), rv$unique_id)[which(continuous_test == TRUE)]
     
     #browser()
     max_v = lapply(continuous_id, function(x) max(as.numeric(rv$data[[x]])[!is.na(as.numeric(rv$data[[x]]))])) %>% unlist()
@@ -290,7 +290,7 @@ create_Metadata_Detection <- function(input, output, session, rv){
                     min = min_v,
                     avg = round(mean_v,2))
     #browser()
-    discrete_id = setdiff(colnames(rv$data), rv$unique_id)[which(continuous_test == FALSE)]
+    discrete_id = base::setdiff(colnames(rv$data), rv$unique_id)[which(continuous_test == FALSE)]
     max_id = lapply(discrete_id, function(x) names(which.max(table(rv$data[[x]])))) %>% unlist()
     min_id = lapply(discrete_id, function(x) names(which.min(table(rv$data[[x]])))) %>% unlist()
     min_v_d = lapply(discrete_id, function(x) min(table(rv$data[[x]]))) %>% unlist()
@@ -496,14 +496,14 @@ create_Metadata_filterConfirm <- function(input, output, session, rv){
     rv$data_bak = rv$data
     if(input$valueCondition2 == ""){
       if(input$relationCondition1 == "in"){
-        cmd = paste0("rv$data %>% filter(", 
+        cmd = paste0("rv$data %>% dplyr::filter(", 
                      input$filterCondition1, " %",
                      input$relationCondition1,"% c('",
                      paste(stringr::str_split(input$valueCondition1,",", simplify = T),
                            collapse = "','")
                      ,"'))")
       }else{
-        cmd = paste0("rv$data %>% filter(", 
+        cmd = paste0("rv$data %>% dplyr::filter(", 
                      input$filterCondition1,
                      input$relationCondition1,
                      input$valueCondition1,")")
@@ -515,7 +515,7 @@ create_Metadata_filterConfirm <- function(input, output, session, rv){
       if(input$joinRelation == "And"){join_sign = "&"}else{join_sign = "|"}
         
       if(input$relationCondition1 == "in"){
-          cmd = paste0("rv$data %>% filter(", 
+          cmd = paste0("rv$data %>% dplyr::filter(", 
                        input$filterCondition1, " %",
                        input$relationCondition1,"% c('",
                        paste(stringr::str_split(input$valueCondition1,",", simplify = T),
@@ -536,7 +536,7 @@ create_Metadata_filterConfirm <- function(input, output, session, rv){
           }
           
         }else{
-          cmd = paste0("rv$data %>% filter(", 
+          cmd = paste0("rv$data %>% dplyr::filter(", 
                        input$filterCondition1,
                        input$relationCondition1,
                        input$valueCondition1," ",join_sign," ")
