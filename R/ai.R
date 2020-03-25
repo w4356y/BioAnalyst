@@ -395,7 +395,7 @@ create_ai_confirm_ai_data <- function(input = input,
     }else{
       req(rv_meta$data)
       req(rv_feature$data)
-      overlap_id = intersect(rv_meta$data$id, 
+      overlap_id = base::intersect(rv_meta$data$id, 
                              row.names(rv_feature$data))
       if(length(overlap_id) == 0 ){
         shiny::showNotification("Merge Error!",

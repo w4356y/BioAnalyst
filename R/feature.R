@@ -2,27 +2,27 @@
 feature_mainbar <- mainPanel(width = 12,
   fluidRow(
     column(width = 7,
-           tabBox(
+           shinydashboard::tabBox(
              title = NULL,
              id = "tabset2", width = NULL,
              shiny::tabPanel( "DataTable_Feature",
                        width = NULL,
-                       box( title = "Data/Plot",
+                       shinydashboard::box( title = "Data/Plot",
                             width = NULL,
                             shiny::div(style = 'overflow-x: scroll; overflow-y: scroll;',
                                 DT::dataTableOutput("feature_table")),
-                            plotOutput("plot2",width = "auto", height = "400px"),
+                            shiny::plotOutput("plot2",width = "auto", height = "400px"),
                             shinyjs::useShinyjs(),
                             fluidRow(column(6,
-                                            actionButton("previousPage","Previous")),
+                                            shiny::actionButton("previousPage","Previous")),
                                      column(6,
-                                            actionButton("nextPage","Next")))
+                                            shiny::actionButton("nextPage","Next")))
 
                         )
                        ),
              shiny::tabPanel( "Stat_sample",
                        width = "100%",
-                       box( title = "",
+                       shinydashboard::box( title = "",
                             width = NULL,
                                      plotOutput("feature_plot_sample",width = "585px", height = "450px"),
                                      div(style = 'overflow-x: scroll; overflow-y: scroll;',
@@ -33,8 +33,11 @@ feature_mainbar <- mainPanel(width = 12,
              ),
              shiny::tabPanel( "Stat_feature",
                        width = "100%",
-                       box(title = "", width = NULL,
-                       plotOutput("feature_plot_feature",width = "585px", height = "450px"),
+                       shinydashboard::box(title = "", 
+                                  width = NULL,
+                                  shiny::plotOutput("feature_plot_feature",
+                                                    width = "585px", 
+                                                    height = "450px"),
                        div(style = 'overflow-x: scroll; overflow-y: scroll;',
                                        DT::dataTableOutput("feature_stat_feature"))
              )
@@ -43,146 +46,361 @@ feature_mainbar <- mainPanel(width = 12,
                     )
            ),
     column(width = 5,
-           box(
+           shinydashboard::box(
              title = "Import/PreProcessing",
              width = NULL,
-             fileInput("feature_file",
-                       "Choose a file",
-                       multiple = F,
-                       accept = c(".csv",
-                                  ".txt",
-                                  ".xlsx")),
+             shiny::fileInput("feature_file",
+                              "Choose a file",
+                              multiple = F,
+                              accept = c(".csv",
+                                         ".txt",
+                                         ".xlsx")
+                              ),
              fluidRow(
-               column(5, actionButton("confirmFeatureFile","Confirm")),
-               column(5, selectInput("id_feature","Please specify the sample ID.", choice = NA))
+               column(5, shiny::actionButton("confirmFeatureFile",
+                                             "Confirm")
+                      ),
+               column(5, shiny::selectInput("id_feature", 
+                                            "Please specify the sample ID.", 
+                                            choice = NA)
+                      )
              ),
              fluidRow(
                column(5,  
-                  actionButton("Prepare", 'Prepare'),
+                  shiny::actionButton("Prepare", 
+                                      'Prepare'
+                                      ),
                   br(),
                   br(),
                   br(),
-                  actionButton("CancelPrepare", 'Cancel Prepare')
-               ),
-                      
+                  shiny::actionButton("CancelPrepare", 
+                                      'Cancel Prepare'
+                                      )
+                  ),
                column(5,
-                      radioButtons("transpose_or_not","Transpose?", choices = c(TRUE, FALSE), selected = FALSE, inline = T),
-                      selectInput("cols_to_discard","Select columns to be discarded.", choices = NA, selectize = TRUE,
-                                  multiple = T)
-             )),
-             column(5, actionButton("featureDetection", 'Detection'))
-           ),
+                      shiny::radioButtons("transpose_or_not", 
+                                          "Transpose?", 
+                                          choices = c(TRUE,
+                                                      FALSE
+                                                      ), 
+                                          selected = FALSE, 
+                                          inline = T
+                                          ),
+                      shiny::selectInput("cols_to_discard",
+                                         "Select columns to be discarded.",
+                                         choices = NA, 
+                                         selectize = TRUE,
+                                         multiple = T)
+                      )
+               ),
+             column(5, 
+                    shiny::actionButton("featureDetection", 
+                                        'Detection')
+                    )
+             ),
           fluidRow(column(6, 
-                          box(title = "NA Filtering",
-                              width = 20,
-
-                              sliderInput("proportion_feature",
-                                          "Proportion of feature NA",
-                                          min = 0,
-                                          max = 100,
-                                          value = 20),
-                              fluidRow(column(6, actionButton("confirmRemoveFeatureNA", "Remove") ),
-                                       column(6, actionButton("cancelRemoveFeatureNA", "Cancel") )
-                                       ),
-
-                              sliderInput("proportion_sample",
-                                          "Proportion of sample NA",
-                                          min = 0,
-                                          max = 100,
-                                          value = 20),
-                              fluidRow(column(6, actionButton("confirmRemoveSampleNA", "Remove")
+                          shinydashboard::box(title = "NA Filtering",
+                                              width = 20,
+                                              shiny::sliderInput("proportion_feature",
+                                                                 "Proportion of feature NA",
+                                                                 min = 0,
+                                                                 max = 100,
+                                                                 value = 20
+                                                                 ),
+                                              fluidRow(column(6, 
+                                                              shiny::actionButton("confirmRemoveFeatureNA", 
+                                                                                  "Remove")
+                                                              ),
+                                                       column(6, shiny::actionButton("cancelRemoveFeatureNA", 
+                                                                                     "Cancel")
+                                                              )
+                                                       ),
+                              shiny::sliderInput("proportion_sample",
+                                                 "Proportion of sample NA",
+                                                 min = 0,
+                                                 max = 100,
+                                                 value = 20
+                                                 ),
+                              fluidRow(column(6, 
+                                              shiny::actionButton("confirmRemoveSampleNA", 
+                                                                  "Remove"
+                                                                  )
                                               ),
-                                       column(6, actionButton("cancelRemoveSampleNA", "Cancel")
-                                              ))
-                          )
+                                       column(6, 
+                                              shiny::actionButton("cancelRemoveSampleNA",
+                                                                  "Cancel"
+                                                                  )
+                                              )
+                                       )
+                              )
                           ),
                    column(6, 
-                          box(title = "Data Transform",
-                              width = 20,
-                              selectInput("fillNAmethod","Select a method to fill NA.", choices = c("row_mean","col_mean","row_min","col_min","constant")),
-                              textInput("fillFeatureNA","Type in a value."),
-                              helpText("Type in r for row mean, c for column mean"),
-                              fluidRow(column(6, actionButton("confirmFillNA", "Confirm")
-                                              ),
-                                       column(6, actionButton("cancelFillNA", "Cancel")
-                                              )),
-                             # actionButton("confirmFillNA", "Confirm"),
-                              selectInput("transformMethod", "Transform method",
-                                          choices = c("log10","log","log2","clr")),
-                              fluidRow(column(6, actionButton("confirmTransform", "Confirm")
-                                              ),
-                                       column(6, actionButton("cancelTransform", "Cancel")
-                                              ))
+                          shinydashboard::box(title = "Data Transform",
+                                              width = 20,
+                                              shiny::selectInput("fillNAmethod", 
+                                                                 "Select a method to fill NA.", 
+                                                                 choices = c("row_mean",
+                                                                             "col_mean",
+                                                                             "row_min",
+                                                                             "col_min",
+                                                                             "constant"
+                                                                             )
+                                                                 ),
+                                              shiny::textInput("fillFeatureNA",
+                                                               "Type in a value."
+                                                               ),
+                                              shiny::helpText("Type in r for row mean, c for column mean"),
+                                              fluidRow(column(6, 
+                                                              shiny::actionButton("confirmFillNA", 
+                                                                                  "Confirm"
+                                                                                  )
+                                                              ),
+                                                       column(6, 
+                                                              shiny::actionButton("cancelFillNA", 
+                                                                                  "Cancel"
+                                                                                  )
+                                                              )
+                                                       ),
+                                              shiny::selectInput("transformMethod", 
+                                                                 "Transform method",
+                                                                 choices = c("log10",
+                                                                             "log",
+                                                                             "log2",
+                                                                             "clr")
+                                                                 ),
+                                              fluidRow(column(6, 
+                                                              shiny::actionButton("confirmTransform", 
+                                                                                  "Confirm"
+                                                                                  )
+                                                              ),
+                                                       column(6, 
+                                                              shiny::actionButton("cancelTransform", 
+                                                                                  "Cancel"
+                                                                                  )
+                                                              )
+                                                       )
+                                              )
                           )
-                   )
                    ),
-          box(title = "Data Transform", 
-              width = 20,
-              tabBox(
-                title = NULL,
-                id = "tabset1", width = NULL,
-                shiny::tabPanel( "PCA w/z meta & Co-linear-Analysis",
-                          box( title = "",
-                               width = NULL,
-                               fluidRow(column(4, radioButtons("axis","Which axis?", choices = c("X","Y"))
-                                               ),
-                                        column(4, radioButtons("center_or_not", "Center or not?", choices = c("TRUE","FALSE"))
-                                               ),
-                                        column(4, radioButtons("scale_or_not", "Scale or not?", choices = c("TRUE","FALSE"))
-                                               ))
-
-                          ),
-                          actionButton("confirmPCA","PCA")
-                ),
+          shinydashboard::box(title = "Data Transform", 
+                              width = 20,
+                              shinydashboard::tabBox(
+                                title = NULL,
+                                id = "tabset1", 
+                                width = NULL,
+                                shiny::tabPanel( "PCA w/z meta & Co-linear-Analysis",
+                                                 shinydashboard::box( 
+                                                   title = "",
+                                                   width = NULL,
+                                                   fluidRow(column(4, 
+                                                                   shiny::radioButtons("axis",
+                                                                                       "Which axis?", 
+                                                                                       choices = c("X","Y")
+                                                                                       )
+                                                                   ),
+                                                            column(4, 
+                                                                   shiny::radioButtons("center_or_not", 
+                                                                                       "Center or not?", 
+                                                                                       choices = c("TRUE",
+                                                                                                   "FALSE"
+                                                                                                   )
+                                                                                       )
+                                                                   ),
+                                                            column(4, 
+                                                                   shiny::radioButtons("scale_or_not", 
+                                                                                       "Scale or not?", 
+                                                                                       choices = c("TRUE",
+                                                                                                   "FALSE"
+                                                                                                   )
+                                                                                       )
+                                                                   )
+                                                            )
+                                                   ),
+                                                 shiny::actionButton("confirmPCA","PCA")
+                                                 ),
                 shiny::tabPanel( "PCA with meta",
-                          box( title = "",
-                               width = NULL,
-                               selectInput("pca_color","Select a color variable.", choices = NA),
-                               selectInput("pca_shape", "Select a shape variable", choices = NA),
-                               actionButton("Join_meta_and_feature","detect_merge")
-                          )
-                ),
+                                 shinydashboard::box( title = "",
+                                                      width = NULL,
+                                                      shiny::selectInput("pca_color",
+                                                                         "Select a color variable.", 
+                                                                         choices = NA
+                                                                         ),
+                                                      shiny::selectInput("pca_shape", 
+                                                                         "Select a shape variable", 
+                                                                         choices = NA
+                                                                         ),
+                                                      shiny::actionButton("Join_meta_and_feature",
+                                                                          "detect_merge")
+                                                      )
+                                 ),
                 shiny::tabPanel( "Complex_Heatmap",
-                          box( title = "",
-                               width = NULL,
-                               fluidRow(column(4, selectInput("heatmap_discrete","Select categorical variables.", choices = NA, selectize = T)),
-                                        column(4, selectInput("heatmap_continuous","Select continuous variables.", choices = NA, selected = T))),
-                               fluidRow(column(4, radioButtons("cluster_row","Cluster row?", choices = c("TRUE", "FALSE"))),
-                                        column(4, radioButtons("cluster_col","Cluster column?", choices = c("TRUE","FALSE")))),
-                               fluidRow(column(4, radioButtons("dend_row","Dend row?", choices = c("TRUE", "FALSE"))),
-                                        column(4, radioButtons("dend_col","Dend column?", choices = c("TRUE","FALSE")))),
-                               fluidRow(column(4, radioButtons("name_row","Name row?", choices = c("TRUE", "FALSE"))),
-                                        column(4, radioButtons("name_col","Name column?", choices = c("TRUE","FALSE")))),
-                               fluidRow(column(4, selectInput("method_row","Method row?", choices = c("ward.D", "ward.D2","single","complete","average","mcquitty","median","centroid"))),
-                                        column(4, selectInput("method_col","Method column?", choices = c("ward.D", "ward.D2","single","complete","average","mcquitty","median","centroid")))),
-                               fluidRow(column(4, selectInput("distance_row","Diatance row?", choices = c("euclidean", "maximum","manhattan","canberra","binary","minkowski","pearson","spearman","kendall"))),
-                                        column(4, selectInput("distance_col","Distance column?", choices = c("euclidean", "maximum","manhattan","canberra","binary","minkowski","pearson","spearman","kendall")))),
-                               actionButton("confirmHeatmap","Heatmap")
-                          )
-                ),
+                                 shinydashboard::box( title = "",
+                                                      width = NULL,
+                                                      fluidRow(column(4, 
+                                                                      shiny::selectInput("heatmap_discrete",
+                                                                                         "Select categorical variables.", 
+                                                                                         choices = NA, 
+                                                                                         selectize = T)
+                                                                      ),
+                                                               column(4, 
+                                                                      shiny::selectInput("heatmap_continuous",
+                                                                                         "Select continuous variables.", 
+                                                                                         choices = NA, 
+                                                                                         selected = T
+                                                                                         )
+                                                                      )
+                                                               ),
+                                                      fluidRow(column(4, 
+                                                                      shiny::radioButtons("cluster_row",
+                                                                                          "Cluster row?", 
+                                                                                          choices = c("TRUE", 
+                                                                                                      "FALSE"
+                                                                                                      )
+                                                                                          )
+                                                                      ),
+                                                               column(4, 
+                                                                      shiny::radioButtons("cluster_col",
+                                                                                          "Cluster column?", 
+                                                                                          choices = c("TRUE",
+                                                                                                      "FALSE"
+                                                                                                      )
+                                                                                          )
+                                                                      )
+                                                               ),
+                                                      fluidRow(column(4, 
+                                                                      shiny::radioButtons("dend_row",
+                                                                                          "Dend row?", 
+                                                                                          choices = c("TRUE", "FALSE")
+                                                                                   )
+                                                                      ),
+                                                               column(4, 
+                                                                      shiny::radioButtons("dend_col",
+                                                                                          "Dend column?", 
+                                                                                          choices = c("TRUE","FALSE")
+                                                                                          )
+                                                                      )
+                                                               ),
+                                                      fluidRow(column(4, 
+                                                                      shiny::radioButtons("name_row",
+                                                                                          "Name row?", 
+                                                                                          choices = c("TRUE", 
+                                                                                                      "FALSE")
+                                                                                          )
+                                                                      ),
+                                                               column(4, 
+                                                                      shiny::radioButtons("name_col",
+                                                                                          "Name column?", 
+                                                                                          choices = c("TRUE",
+                                                                                                      "FALSE"
+                                                                                                      )
+                                                                                          )
+                                                                      )
+                                                               ),
+                                                      fluidRow(column(4, 
+                                                                      shiny::selectInput("method_row",
+                                                                                  "Method row?", 
+                                                                                  choices = c("ward.D", 
+                                                                                              "ward.D2",
+                                                                                              "single",
+                                                                                              "complete",
+                                                                                              "average",
+                                                                                              "mcquitty",
+                                                                                              "median",
+                                                                                              "centroid"
+                                                                                              )
+                                                                                  )
+                                                                      ),
+                                                               column(4, 
+                                                                      shiny::selectInput("method_col",
+                                                                                         "Method column?", 
+                                                                                         choices = c("ward.D", 
+                                                                                                     "ward.D2",
+                                                                                                     "single",
+                                                                                                     "complete",
+                                                                                                     "average",
+                                                                                                     "mcquitty",
+                                                                                                     "median",
+                                                                                                     "centroid"
+                                                                                                     )
+                                                                                         )
+                                                                      )
+                                                               ),
+                                                      fluidRow(column(4, 
+                                                                      shiny::selectInput("distance_row",
+                                                                                  "Diatance row?", 
+                                                                                  choices = c("euclidean", 
+                                                                                              "maximum",
+                                                                                              "manhattan",
+                                                                                              "canberra",
+                                                                                              "binary",
+                                                                                              "minkowski",
+                                                                                              "pearson",
+                                                                                              "spearman",
+                                                                                              "kendall"
+                                                                                              )
+                                                                                  )
+                                                                      ),
+                                                               column(4, 
+                                                                      shiny::selectInput("distance_col",
+                                                                                         "Distance column?",
+                                                                                         choices = c("euclidean",
+                                                                                                     "maximum",
+                                                                                                     "manhattan",
+                                                                                                     "canberra",
+                                                                                                     "binary",
+                                                                                                     "minkowski",
+                                                                                                     "pearson",
+                                                                                                     "spearman",
+                                                                                                     "kendall"
+                                                                                                     )
+                                                                                         )
+                                                                      )
+                                                               ),
+                                                      shiny::actionButton("confirmHeatmap",
+                                                                          "Heatmap")
+                                                      )
+                                 ),
                 shiny::tabPanel( "Differential_Analysis",
-                          box( title = "", 
-                               width = NULL,
-                               selectInput("diff_group","Select a group.", choices = NA),
-                               fluidRow(column(5, selectInput("p_signif","Select a sig level.", choices = c(0.05, 0.01, 0.001))),
-                                        column(5, selectInput("diff_method","Select a method.", choices = c("K-W", "Wilcox")))),
-                               selectInput("paired_method","Paired or not.", choices = c("TRUE","FALSE")),
-                               actionButton("confirmDifferential","Differential")
-                          )
+                                 shinydashboard::box( title = "", 
+                                                      width = NULL,
+                                                      shiny::selectInput("diff_group",
+                                                                         "Select a group.", 
+                                                                         choices = NA
+                                                                         ),
+                                                      fluidRow(column(5, 
+                                                                      shiny::selectInput("p_signif",
+                                                                                         "Select a sig level.", 
+                                                                                         choices = c(0.05,
+                                                                                                     0.01, 
+                                                                                                     0.001
+                                                                                                     )
+                                                                                         )
+                                                                      ),
+                                                               column(5, 
+                                                                      shiny::selectInput("diff_method",
+                                                                                         "Select a method.",
+                                                                                         choices = c("K-W", 
+                                                                                                     "Wilcox"
+                                                                                                     )
+                                                                                         )
+                                                                      )
+                                                               ),
+                                                      shiny::selectInput("paired_method",
+                                                                         "Paired or not.", 
+                                                                         choices = c("TRUE",
+                                                                                     "FALSE"
+                                                                                     )
+                                                                         ),
+                                                      shiny::actionButton("confirmDifferential",
+                                                                          "Differential"
+                                                                          )
+                                                      )
+                                 )
                 )
-                
-              )
-              
-              )
-          
-           
-           )
-    
+                )
+          )
   )
 )
-
-
-
 
 
 create_Feature_confirmFeatureFile <- function(input = input, 
