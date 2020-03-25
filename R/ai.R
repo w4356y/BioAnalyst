@@ -655,7 +655,7 @@ create_ai_confirm_logreg <- function(input = input,
     }
     )
     output$plot_ai <-   shiny::renderPlot({
-      pRoc::roc(rv$test$label,
+      pROC::roc(rv$test$label,
                 pred[,1],
                 plot=TRUE,
                 print.thres = TRUE,

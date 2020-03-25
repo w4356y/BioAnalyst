@@ -76,10 +76,10 @@ create_header <- function(){
         id = "login",
         title = "Login",
                     #taskItem(value = 20, color = "aqua", "Refactor code"),
-        textInput("login.user","User ID"),
-        textInput("login.password","Password"),
-        textInput("anhao","Verify Code"),
-        actionButton("confirmLogin","Log In")
+        shiny::textInput("login.user","User ID"),
+        shiny::textInput("login.password","Password"),
+        shiny::textInput("anhao","Verify Code"),
+        shiny::actionButton("confirmLogin","Log In")
       )
       # dropdownBlock(
       #   id = "mydropdown2",

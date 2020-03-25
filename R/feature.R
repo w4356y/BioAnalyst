@@ -1273,16 +1273,19 @@ create_Feature_Prepare <- function(input,
   event <- observeEvent(input$Prepare, {
     req(rv$data)
     rv$data_bak = rv$data
+    #browser()
     sample_id = rv$data[[input$id_feature]]
     if(sum(duplicated(sample_id)) > 0){
       showNotification("Sample ID wrong!",
                        "Please select a unique id.")
     }
-    if(input$cols_to_discard != ""){
+    if(!is.null(input$cols_to_discard)){
+      if(input$cols_to_discard != ""){
       for(col in input$cols_to_discard){
         rv$data[[col]] = NULL
       }
-    }
+      }
+      }
     req(sum(duplicated(sample_id)) == 0)
     if(input$transpose_or_not == TRUE){
       row.names(rv$data) = sample_id
