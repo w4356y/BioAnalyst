@@ -10,7 +10,7 @@ Authors@R:
 Description: To be Added.
 License: Apache License
 Depends: 
-    R (> 3.6)
+    R (> 3.5)
 Encoding: UTF-8
 Language: es
 LazyData: true
