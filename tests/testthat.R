@@ -1,4 +1,4 @@
 library(testthat)
-library(BioAnalyst)
+#library(BioAnalyst)
 
 test_check("BioAnalyst")
