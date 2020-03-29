@@ -6,5 +6,5 @@ source("R/server.R", encoding = "UTF-8")
 #'
 #' @export
 runApp <- function(){
-   shinyApp(ui = ui, server = server)
+   shiny::shinyApp(ui = ui, server = server)
  }
