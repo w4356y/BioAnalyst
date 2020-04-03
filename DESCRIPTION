@@ -19,7 +19,14 @@ Imports:
     shinyWidgets,
     shinydashboardPlus,
     shinydashboard,
-    shiny
+    shiny,
+    DT,
+    caret,
+    pROC,
+    dplyr,
+    stringr,
+    readr,
+    readxl
 Suggests: 
     knitr,
     rmarkdown,
