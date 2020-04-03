@@ -1,0 +1,12 @@
+name: BioAnalyst
+title: BioAnalyst
+username:
+account: w4356y
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2050146
+bundleId: 2964483
+url: https://w4356y.shinyapps.io/BioAnalyst/
+when: 1585923559.32156
+asMultiple: FALSE
+asStatic: FALSE

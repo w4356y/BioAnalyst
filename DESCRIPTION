@@ -26,7 +26,13 @@ Imports:
     dplyr,
     stringr,
     readr,
-    readxl
+    readxl,
+    shinyjs,
+    bs4Dash,
+    ggpubr,
+    base,
+    stats
+Remotes:jokergoo/ComplexHeatmap
 Suggests: 
     knitr,
     rmarkdown,
