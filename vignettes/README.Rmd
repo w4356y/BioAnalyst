@@ -15,12 +15,10 @@ knitr::opts_chunk$set(
 )
 ```
 # BioAnalyst
-
 <!-- badges: start -->
 [![Build Status](https://travis-ci.com/kbajdzienko/mn.crd.app.svg?token=EXLmQ5prppsE3ZXzWHeJ&branch=master)](https://travis-ci.com/kbajdzienko/mn.crd.app)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
-
 
 
 ## Installation
