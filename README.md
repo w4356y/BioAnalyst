@@ -1,5 +1,5 @@
 # BioAnalyst
-![alt text](https://https://github.com/w4356y/BioAnalyst/blob/master/www/Wei2Go_logo.png)
+![alt text](https://github.com/w4356y/BioAnalyst/blob/master/www/Wei2Go_logo.png)
 A public shiny app that is used to do basic data analysis for biological data.
 1. Metadata table, filtering by conditions, stats(hist for continuous variable and pie plot for discrete variable), NA filling, regression analysis, corelation analysis and Chi-square test between 2 categorical variable.
 2. Feature table, including features about gene, microbiome, metabolites. NA stats by sample or by feature, filter samples or features by NA proportion, NA filling(constant, row mean, col mean), data transform(log, log10,log2,...). Besides, PCA by variable in metadata table, complex heatmap, differential analysis.
