@@ -8,7 +8,7 @@ A public shiny app that is used to do basic data analysis for biological data.
 3. Machine learning, including data from metadata table and feature table, or you can just upload another tables. Spliting dataset, model configuration(cv, metric, ...), model choice and specification. The results will show AUC plot and confusion matrix.
 
 The application is accesable on shiny.io, https://w4356y.shinyapps.io/BioAnalyst/
-## Instalation
+## Installation
 You can install the package with the following command：
 ```
 devtools::install_github("w4356y/BioAnalyst")
