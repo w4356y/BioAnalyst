@@ -106,6 +106,11 @@ ui <-  shinydashboardPlus::dashboardPagePlus(
   body =   shinydashboard::dashboardBody(
     #useShinyjs(),
     #useShinyjs(),
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+      shinyjs::useShinyjs(),
+      tags$script(src = "script.js")
+    ),
     shinydashboard::tabItems(
       shinydashboard::tabItem(
         tabName = "dashboard",
