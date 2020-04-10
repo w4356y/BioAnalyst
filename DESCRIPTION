@@ -31,7 +31,8 @@ Imports:
     bs4Dash,
     ggpubr,
     base,
-    stats
+    stats,
+    rgr
 Remotes:jokergoo/ComplexHeatmap
 Suggests: 
     knitr,

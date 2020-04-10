@@ -560,7 +560,8 @@ create_Feature_confirmRemoveFeatureNA <- function(input = input,
     featureid = dplyr::filter(rv$feature_stat, 
                        na < input$proportion_feature/100) %>% pull(features)
     #browser()
-    rv$data = rv$data  %>% select(featureid)
+    req(length(featureid) > 1)
+    rv$data = rv$data  %>% dplyr::select(featureid)
     output$feature_table <- DT::renderDataTable({
       #browser()
       DT::datatable(rv$data, 
@@ -770,7 +771,8 @@ create_Feature_confirmTransform <- function(input = input,
                       2, 
                       function(x) log10(as.numeric(x) + 1)) %>% as.data.frame()
     }else{
-      
+      #browser()
+      rv$data = rgr::clr(rv$data)
     }
     row.names(rv$data) = row.names(rv$transform_bak)
     output$feature_table <- DT::renderDataTable({
