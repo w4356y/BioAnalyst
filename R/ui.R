@@ -14,6 +14,7 @@ source("R/feature.R",
        encoding = "UTF-8")
 
 ui <-  shinydashboardPlus::dashboardPagePlus(
+  shinythemes::themeSelector(),
   skin  = "green-light",
   header =  create_header(),
   sidebar =   shinydashboard::dashboardSidebar(
