@@ -46,7 +46,6 @@ ui <-  shinydashboardPlus::dashboardPagePlus(
                  #bookmarkButton(id = "BookmarK")
       )
     ),
-  
   rightsidebar = bs4Dash::dashboardControlbar(
     skin = 'dark', 
     inputId = "controlBar",

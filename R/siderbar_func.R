@@ -72,6 +72,20 @@ create_header <- function(){
       #     icon_off = icon("remove")
       #   )
       # ),
+      fixedPanel(
+        div(
+          actionBttn("fullScreen",
+                     style = "material-circle",
+                     icon = icon("arrows-alt"),
+                     size = "xs",
+                     color = "warning"),
+          shinyBS::bsPopover("fullScreen", title = NULL, content = "Click to view in full screen", placement = "right", trigger = "hover",
+                             options = NULL),
+          onclick = "shinyjs.toggleFullScreen();"
+        ),
+        top = 100,
+        right = 10
+      ),
       shinydashboardPlus::dropdownBlock(
         id = "login",
         title = "Login",
