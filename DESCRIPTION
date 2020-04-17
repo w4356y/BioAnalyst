@@ -32,6 +32,7 @@ Imports:
     ggpubr,
     base,
     stats,
+    fastICA,
     rgr
 Remotes:jokergoo/ComplexHeatmap
 Suggests: 
