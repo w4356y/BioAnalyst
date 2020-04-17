@@ -824,6 +824,7 @@ create_Feature_confirmPCA <- function(input = input,
   event <- observeEvent(input$confirmPCA, {
     #browser()
     req(rv$data)
+    #browser()
     if(is.null(rv$fillNA_status)){
       showNotification("NA values detected.", 
                        "NA filling is needed.")
@@ -857,15 +858,19 @@ create_Feature_confirmPCA <- function(input = input,
     library(ggplot2)
     output$plot2 = renderPlot({
       #library("ggpubr")
+      choice = c(1,2)
+      var_exp = round(100*pca$sdev[choice]^2/sum(pca$sdev^2),2)
       ggplot(pca$x %>% as.data.frame(), 
              aes(x = PC1,
-                 y = PC1, 
+                 y = PC2, 
                  label = row.names(pca$x)
                  )
              ) + 
         geom_point(size = 5) + ggrepel::geom_text_repel() + theme_bw() + 
         theme(axis.title = element_text(size=16),
-              axis.text = element_text(size= 12))
+              axis.text = element_text(size= 12)) + 
+        xlab(paste0("PC1 (",var_exp[1],"% Explained Var.)")) + 
+        ylab(paste0("PC2 (",var_exp[2],"% Explained Var.)")) 
     })
     
   })
@@ -903,6 +908,7 @@ create_Feature_Join_meta_and_feature <- function(input = input,
        showNotification("Merge Error!", 
                         "Please check the id for meta and feature.")
      }
+     #browser()
      req(!is.null(overlap_id))
      showNotification("Merge successfully!", 
                       paste0("There are ", 
@@ -917,15 +923,19 @@ create_Feature_Join_meta_and_feature <- function(input = input,
      #browser()
      if(input$pca_color == "NA"){
        if(input$pca_shape == "NA"){
+         choice = c(1,2)
+         var_exp = round(100*pca$sdev[choice]^2/sum(pca$sdev^2),2)
          p =  ggplot(pca$x %>% as.data.frame(), 
                      aes(x = PC1, 
-                         y = PC1, 
+                         y = PC2, 
                          label = row.names(pca$x)
                          )
                      ) + 
            geom_point(size = 5) + ggrepel::geom_text_repel() + theme_bw() + 
            theme(axis.title = element_text(size=16),
-                 axis.text = element_text(size= 12))
+                 axis.text = element_text(size= 12))  + 
+           xlab(paste0("PC1 (",var_exp[1],"% Explained Var.)")) + 
+           ylab(paste0("PC2 (",var_exp[2],"% Explained Var.)")) 
        }else{
          df_merge = as.data.frame(pca$x)
          df_merge$id = row.names(pca$x)
@@ -933,9 +943,11 @@ create_Feature_Join_meta_and_feature <- function(input = input,
            left_join(rv_meta$data, 
                      by = c("id" = "id")
                      )
+         choice = c(1,2)
+         var_exp = round(100*pca$sdev[choice]^2/sum(pca$sdev^2),2)
          p =  ggplot(df_merge, 
                      aes(x = PC1, 
-                         y = PC1, 
+                         y = PC2, 
                          label = row.names(pca$x)
                          )
                      ) + 
@@ -944,7 +956,9 @@ create_Feature_Join_meta_and_feature <- function(input = input,
                           )
                       ) + theme_bw() + 
            theme(axis.title = element_text(size=16),
-                 axis.text = element_text(size= 12)) + labs(color = input$pca_shape)
+                 axis.text = element_text(size= 12)) + labs(color = input$pca_shape)  + 
+           xlab(paste0("PC1 (",var_exp[1],"% Explained Var.)")) + 
+           ylab(paste0("PC2 (",var_exp[2],"% Explained Var.)")) 
        }
      }else{
        if(input$pca_shape == "NA"){
@@ -954,9 +968,11 @@ create_Feature_Join_meta_and_feature <- function(input = input,
            left_join(rv_meta$data, 
                      by = c("id" = "id")
                      )
+         choice = c(1,2)
+         var_exp = round(100*pca$sdev[choice]^2/sum(pca$sdev^2),2)
          p =  ggplot(df_merge, 
                      aes(x = PC1, 
-                         y = PC1, 
+                         y = PC2, 
                          label = row.names(pca$x)
                          )
                      ) + 
@@ -964,7 +980,9 @@ create_Feature_Join_meta_and_feature <- function(input = input,
                       aes(color = !!as.name(input$pca_color))
                       )  + theme_bw() + 
            theme(axis.title = element_text(size=16),
-                 axis.text = element_text(size= 12)) + labs(color = input$pca_color )
+                 axis.text = element_text(size= 12)) + labs(color = input$pca_color ) + 
+           xlab(paste0("PC1 (",var_exp[1],"% Explained Var.)")) + 
+           ylab(paste0("PC2 (",var_exp[2],"% Explained Var.)")) 
        }else{
          df_merge = as.data.frame(pca$x)
          df_merge$id = row.names(pca$x)
@@ -973,9 +991,11 @@ create_Feature_Join_meta_and_feature <- function(input = input,
            left_join(rv_meta$data, 
                      by = c("id" = "id")
                      )
+         choice = c(1,2)
+         var_exp = round(100*pca$sdev[choice]^2/sum(pca$sdev^2),2)
          p =  ggplot(df_merge, 
                      aes(x = PC1, 
-                         y = PC1, 
+                         y = PC2, 
                          label = row.names(pca$x)
                          )
                      ) + 
@@ -986,7 +1006,9 @@ create_Feature_Join_meta_and_feature <- function(input = input,
                       ) + theme_bw() + 
            theme(axis.title = element_text(size=16),
                  axis.text = element_text(size= 12)) + labs(color = input$pca_color, 
-                                                            shape = input$pca_shape) 
+                                                            shape = input$pca_shape)  + 
+           xlab(paste0("PC1 (",var_exp[1],"% Explained Var.)")) + 
+           ylab(paste0("PC2 (",var_exp[2],"% Explained Var.)")) 
        }
      }
      
@@ -1039,9 +1061,9 @@ create_Feature_confirmHeatmap <- function(input = input,
     #x2 = as.name(input$heatmap_continuous)
     #browser()
     ha1 = ComplexHeatmap::HeatmapAnnotation(Var1 = df_meta[overlap_id,] %>% 
-                                              pull(as.name(input$heatmap_discrete)),
+                                              pull(!!as.name(input$heatmap_discrete)),
                             Var2 = df_meta[overlap_id,] %>% 
-                              pull(as.name(input$heatmap_continuous)) %>% as.numeric())
+                              pull(!!as.name(input$heatmap_continuous)) %>% as.numeric())
     #Heatmap(rv_feature$data[overlap_id,], name = "rnorm", col = col_rnorm, top_annotation = ha1)
     #browser()
     #ha1 = ComplexHeatmap::HeatmapAnnotation(as.name(input$heatmap_discrete) = c())

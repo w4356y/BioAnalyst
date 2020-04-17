@@ -24,8 +24,8 @@ read_delimKB <- function(path){
                    xlsx = read_xlsx(path, col_names = FALSE))
   
   
-  x <- slice(df_raw, 1) %>% 
-    str_to_lower() %>%
+  x <- slice(df_raw, 1)  %>%
+    as.character() %>%
     enc2utf8() %>%
     str_replace_all('[:space:]','_') %>%
     str_replace_all('[:punct:]','_') %>%
@@ -37,4 +37,13 @@ read_delimKB <- function(path){
   # browser()
   df = replace(df, is.na(df),"NA")
   return(df)
+}
+
+
+
+list_to_numeric <- function(df){
+  row_name = row.names(df)
+  res = sapply(df, function(x) as.numeric(as.character(x))) %>% as.data.frame()
+  row.names(res) = row_name
+  return(res)
 }
