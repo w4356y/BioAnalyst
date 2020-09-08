@@ -263,6 +263,9 @@ server <- function(input,
   create_ai_confirm_lr(input = input,
                        output = output,
                        rv = rv_ai)
+  create_clickLog(input = input,
+                  output = output,
+                  session = session)
 
 
 
